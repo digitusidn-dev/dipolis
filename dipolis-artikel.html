@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrolling Tanpa Henti: Bagaimana Media Sosial Merusak Pola Tidurmu | dipolis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #4E0087;
+      --purple-light: #6b00b8;
+      --lime: #DAFF72;
+      --pink: #FF3F84;
+      --black: #000000;
+      --white: #FFFFFF;
+      --surface: #f4f4f8;
+      --surface-2: #eaeaef;
+      --border: #dddde8;
+      --text-muted: rgba(6,6,8,.55);
+      --text-dim: rgba(6,6,8,.38);
+      --radius: 16px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; color: #111; font-family: 'Outfit', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+
+    /* -- NAVBAR -- */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: #4E0087; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); transition: all .3s; }
+    .navbar.scrolled { background: #4E0087; box-shadow: 0 4px 24px rgba(78,0,135,.4); }
+    .nav-inner { display: flex; align-items: center; height: 68px; gap: 24px; }
+    .nav-logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
+    .nav-logo-svg { width: 34px; height: 34px; flex-shrink: 0; }
+    .nav-logo-text { font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: .01em; color: #fff; }
+    .nav-links { display: flex; list-style: none; gap: 2px; margin-left: auto; }
+    .nav-links a { display: block; padding: 7px 14px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.9); border-radius: 8px; transition: all .18s; }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,.12); }
+    .nav-search { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.15); border-radius: 100px; padding: 7px 14px; transition: all .2s; }
+    .nav-search:focus-within { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.3); }
+    .nav-search svg { width: 15px; height: 15px; stroke: rgba(255,255,255,.7); flex-shrink: 0; }
+    .nav-search input { background: none; border: none; outline: none; font-family: 'Outfit', sans-serif; font-size: 13px; color: #fff; width: 140px; }
+    .nav-search input::placeholder { color: rgba(255,255,255,.45); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; margin-left: 8px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: #fff; transition: all .3s; border-radius: 2px; }
+
+    /* -- BREADCRUMB -- */
+    .breadcrumb { padding: 20px 0; font-size: 13px; color: var(--text-dim); }
+    .breadcrumb a { color: var(--text-muted); transition: color .18s; }
+    .breadcrumb a:hover { color: var(--purple); }
+    .breadcrumb span { margin: 0 8px; }
+
+    /* -- ARTICLE HEADER -- */
+    .art-header { padding: 0 0 48px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+    .art-tag { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 20px; }
+    .art-tag-p { background: rgba(78,0,135,.08); color: var(--purple); }
+    .art-tag-k { background: rgba(255,63,132,.08); color: var(--pink); }
+    .art-tag-l { background: rgba(100,120,0,.1); color: #4a5c00; }
+    .art-h1 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(28px, 4vw, 46px); line-height: 1.12; letter-spacing: -.03em; color: #111; margin-bottom: 20px; max-width: 720px; }
+    .art-excerpt { font-size: 17px; color: var(--text-muted); line-height: 1.7; max-width: 660px; margin-bottom: 28px; }
+    .art-meta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .art-author { display: flex; align-items: center; gap: 10px; }
+    .art-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--purple); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #fff; flex-shrink: 0; }
+    .art-author-info { display: flex; flex-direction: column; }
+    .art-author-name { font-size: 13px; font-weight: 700; color: #111; }
+    .art-author-role { font-size: 11px; color: var(--text-dim); }
+    .art-meta-sep { width: 1px; height: 24px; background: var(--border); }
+    .art-meta-item { font-size: 12px; font-weight: 600; color: var(--text-dim); letter-spacing: .06em; text-transform: uppercase; }
+
+    /* -- FEATURED IMAGE -- */
+    .art-hero-img { width: 100%; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden; margin-bottom: 56px; background: linear-gradient(135deg, #4E0087 0%, #1a0035 50%, #000 100%); position: relative; }
+    .art-hero-img img { width: 100%; height: 100%; object-fit: cover; }
+    .art-hero-pat { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px); background-size: 20px 20px; }
+    .art-hero-caption { font-size: 12px; color: var(--text-dim); text-align: center; margin-top: 12px; margin-bottom: 48px; }
+
+    /* -- ARTICLE LAYOUT (content + sidebar) -- */
+    .art-layout { display: grid; grid-template-columns: 1fr 320px; gap: 64px; align-items: start; }
+
+    /* -- ARTICLE BODY -- */
+    .art-body { max-width: 100%; }
+    .art-body h2 { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -.02em; line-height: 1.2; margin: 48px 0 16px; color: #111; }
+    .art-body h3 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -.01em; line-height: 1.3; margin: 36px 0 12px; color: #111; }
+    .art-body p { font-size: 16px; line-height: 1.85; color: #333; margin-bottom: 20px; }
+    .art-body ul, .art-body ol { margin: 16px 0 24px 24px; }
+    .art-body li { font-size: 16px; line-height: 1.85; color: #333; margin-bottom: 8px; }
+    .art-body li::marker { color: var(--purple); }
+    .art-body blockquote { border-left: 3px solid var(--purple); padding: 16px 24px; margin: 28px 0; background: rgba(78,0,135,.03); border-radius: 0 12px 12px 0; }
+    .art-body blockquote p { font-size: 16px; font-style: italic; color: #444; margin-bottom: 0; }
+    .art-body strong { font-weight: 700; color: #111; }
+    .art-body a { color: var(--purple); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    .art-body a:hover { color: var(--purple-light); }
+    .art-body img { width: 100%; border-radius: 12px; margin: 24px 0; }
+
+    .art-callout { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin: 28px 0; }
+    .art-callout-title { font-weight: 800; font-size: 14px; color: var(--purple); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .08em; }
+    .art-callout p { margin-bottom: 0; }
+
+    /* -- ARTICLE TAGS (bottom) -- */
+    .art-tags-bottom { display: flex; flex-wrap: wrap; gap: 8px; padding: 32px 0; border-top: 1px solid var(--border); margin-top: 48px; }
+    .art-btag { padding: 6px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; font-size: 12px; font-weight: 600; color: var(--text-muted); transition: all .2s; }
+    .art-btag:hover { border-color: rgba(78,0,135,.3); color: var(--purple); }
+
+    /* -- SHARE BAR -- */
+    .art-share { display: flex; align-items: center; gap: 12px; padding: 24px 0; border-top: 1px solid var(--border); }
+    .art-share-label { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--text-dim); margin-right: 4px; }
+    .share-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; cursor: pointer; transition: all .2s; color: var(--text-muted); }
+    .share-btn:hover { background: var(--purple); border-color: var(--purple); color: #fff; }
+
+    /* -- SIDEBAR -- */
+    .sidebar { position: sticky; top: 92px; }
+    .sb-section { margin-bottom: 32px; }
+    .sb-title { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+
+    .toc { list-style: none; }
+    .toc li { margin-bottom: 2px; }
+    .toc a { display: block; padding: 8px 12px; font-size: 13px; font-weight: 500; color: var(--text-muted); border-radius: 8px; border-left: 2px solid transparent; transition: all .18s; }
+    .toc a:hover { color: var(--purple); background: rgba(78,0,135,.04); border-left-color: var(--purple); }
+    .toc a.active { color: var(--purple); font-weight: 700; background: rgba(78,0,135,.05); border-left-color: var(--purple); }
+
+    .sb-related { list-style: none; }
+    .sb-related li { padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .sb-related li:last-child { border-bottom: none; }
+    .sb-related a { display: block; }
+    .sb-rel-tag { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--pink); margin-bottom: 4px; }
+    .sb-rel-title { font-size: 14px; font-weight: 700; color: #111; line-height: 1.35; transition: color .18s; }
+    .sb-related a:hover .sb-rel-title { color: var(--purple); }
+    .sb-rel-date { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    .sb-newsletter { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; }
+    .sb-nl-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; margin-bottom: 8px; color: #111; }
+    .sb-nl-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+    .sb-nl-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 100px; font-family: 'Outfit', sans-serif; font-size: 13px; outline: none; margin-bottom: 8px; transition: border-color .2s; }
+    .sb-nl-input:focus { border-color: var(--purple); }
+    .sb-nl-btn { width: 100%; padding: 10px; background: var(--purple); color: #fff; border: none; border-radius: 100px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; transition: background .2s; }
+    .sb-nl-btn:hover { background: var(--purple-light); }
+
+    /* -- RELATED ARTICLES BOTTOM -- */
+    .related-sec { padding: 80px 0; background: var(--surface); border-top: 1px solid var(--border); }
+    .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .rcard { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all .25s; }
+    .rcard:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.06); border-color: rgba(78,0,135,.2); }
+    .rcard-thumb { height: 180px; position: relative; overflow: hidden; }
+    .rcard-body { padding: 22px 22px 26px; }
+    .rcard-tag { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 8px; }
+    .rcard-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; line-height: 1.3; letter-spacing: -.01em; margin-bottom: 10px; color: #111; }
+    .rcard-date { font-size: 11px; color: var(--text-dim); }
+    .rcard-link { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--purple); display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; transition: gap .2s; }
+    .rcard:hover .rcard-link { gap: 10px; }
+
+    /* -- FOOTER -- */
+    .footer { background: #0d0d0d; border-top: 1px solid rgba(255,255,255,.06); }
+    .footer-inner { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 48px; padding: 64px 0 48px; }
+    .fb-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .fb-logo-text { font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: .01em; color: #fff; }
+    .fb-desc { font-size: 13px; color: rgba(255,255,255,.45); max-width: 260px; line-height: 1.7; margin-bottom: 24px; }
+    .socials { display: flex; gap: 8px; }
+    .sbtn { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .2s; color: rgba(255,255,255,.5); }
+    .sbtn:hover { background: var(--purple); border-color: var(--purple); color: #fff; }
+    .fcol-title { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 20px; }
+    .flinks { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .flinks a { font-size: 13px; color: rgba(255,255,255,.6); transition: color .18s; }
+    .flinks a:hover { color: #fff; }
+    .footer-bot { border-top: 1px solid rgba(255,255,255,.06); padding: 20px 0; display: flex; align-items: center; justify-content: space-between; }
+    .fcopy { font-size: 12px; color: rgba(255,255,255,.3); }
+    .fcopy b { color: var(--lime); }
+    .fbot-r { display: flex; gap: 24px; }
+    .fbot-r a { font-size: 11px; color: var(--text-dim); letter-spacing: .08em; text-transform: uppercase; transition: color .18s; }
+    .fbot-r a:hover { color: var(--white); }
+
+    /* -- RESPONSIVE -- */
+    @media (max-width: 1024px) {
+      .art-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+      .related-grid { grid-template-columns: 1fr 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-search { display: none; }
+      .hamburger { display: flex; }
+      .art-h1 { font-size: 26px; }
+      .art-hero-img { border-radius: 12px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .related-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .footer-bot { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="nb">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="dipolis-v1.html" class="nav-logo">
+        <img src="logo-white.png" class="nav-logo-svg" alt="dipolis logo">
+        <span class="nav-logo-text">dipolis</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="dipolis-v1.html#artikel">Artikel</a></li>
+        <li><a href="dipolis-v1.html#topik">Topik</a></li>
+        <li><a href="dipolis-v1.html#skillup">Skill Up</a></li>
+        <li><a href="dipolis-v1.html#layanan">Layanan</a></li>
+        <li><a href="dipolis-v1.html#tanya">Tanya dipolis</a></li>
+        <li><a href="dipolis-v1.html#tentang">Tentang</a></li>
+      </ul>
+      <div class="nav-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Cari artikel...">
+      </div>
+      <button class="hamburger" id="hbg"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- ARTICLE PAGE -->
+<main style="padding-top:68px;">
+  <div class="container">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="dipolis-v1.html">Home</a>
+      <span>/</span>
+      <a href="#">Artikel</a>
+      <span>/</span>
+      <a href="#">Mindfulness</a>
+      <span>/</span>
+      Scrolling Tanpa Henti
+    </div>
+
+    <!-- Article Header -->
+    <header class="art-header">
+      <span class="art-tag art-tag-p">Mindfulness &amp; Case Study</span>
+      <h1 class="art-h1">Scrolling Tanpa Henti: Bagaimana Media Sosial Merusak Pola Tidurmu</h1>
+      <p class="art-excerpt">Studi terbaru ungkap korelasi kuat antara penggunaan medsos malam hari dan kualitas tidur Gen Z. Apa yang sebenarnya terjadi, dan bagaimana cara mengatasinya?</p>
+      <div class="art-meta">
+        <div class="art-author">
+          <div class="art-avatar">RA</div>
+          <div class="art-author-info">
+            <span class="art-author-name">Rizky Ananda</span>
+            <span class="art-author-role">Editor dipolis</span>
+          </div>
+        </div>
+        <div class="art-meta-sep"></div>
+        <span class="art-meta-item">5 Jun 2026</span>
+        <div class="art-meta-sep"></div>
+        <span class="art-meta-item">8 min baca</span>
+      </div>
+    </header>
+
+    <!-- Featured Image -->
+    <div class="art-hero-img">
+      <div class="art-hero-pat"></div>
+    </div>
+    <p class="art-hero-caption">Ilustrasi: dampak penggunaan gadget sebelum tidur terhadap kualitas istirahat.</p>
+
+    <!-- Content + Sidebar Layout -->
+    <div class="art-layout">
+
+      <!-- Article Body -->
+      <article class="art-body">
+
+        <h2 id="s1">Fenomena Scrolling Malam Hari</h2>
+        <p>Kamu pasti pernah mengalaminya. Sudah pukul 11 malam, tapi tangan masih terus menggulir layar. Video demi video, story demi story. Sebelum sadar, jam sudah menunjukkan pukul 2 pagi.</p>
+        <p>Fenomena ini disebut <strong>revenge bedtime procrastination</strong>, kebiasaan menunda tidur untuk mendapatkan waktu luang yang tidak didapat sepanjang hari. Dan media sosial adalah pemicu utamanya.</p>
+
+        <blockquote>
+          <p>"Gen Z menghabiskan rata-rata 3,5 jam per hari di media sosial. 67% dari mereka mengaku mengecek ponsel sebagai aktivitas terakhir sebelum tidur."</p>
+        </blockquote>
+
+        <h2 id="s2">Apa Kata Riset Terbaru?</h2>
+        <p>Penelitian yang dipublikasikan dalam Journal of Sleep Research (2025) melibatkan 12.000 responden berusia 16 hingga 25 tahun di Asia Tenggara. Hasilnya mengejutkan:</p>
+        <ul>
+          <li><strong>78%</strong> responden yang menggunakan medsos lebih dari 2 jam sebelum tidur melaporkan kualitas tidur buruk</li>
+          <li><strong>Blue light</strong> dari layar menekan produksi melatonin hingga 50%</li>
+          <li><strong>Konten yang memicu emosi</strong> (FOMO, kecemasan, excitement) membuat otak tetap aktif saat seharusnya sudah rest mode</li>
+          <li>Dampaknya terasa hingga <strong>3 hari ke depan</strong> dalam bentuk penurunan fokus dan produktivitas</li>
+        </ul>
+
+        <h2 id="s3">Dampak Nyata yang Sering Diabaikan</h2>
+        <p>Kurang tidur bukan sekadar membuat kantuk. Efek domino-nya jauh lebih serius dari yang kita kira, terutama untuk anak muda yang sedang dalam masa produktif:</p>
+
+        <h3>1. Penurunan Performa Akademik dan Kerja</h3>
+        <p>Studi menunjukkan bahwa tidur kurang dari 7 jam secara konsisten menurunkan kemampuan kognitif setara dengan memiliki kadar alkohol dalam darah di atas batas legal. Bayangkan menghadiri kelas atau meeting dalam kondisi seperti itu setiap hari.</p>
+
+        <h3>2. Risiko Kesehatan Mental</h3>
+        <p>Sleep deprivation kronis meningkatkan risiko anxiety dan depresi hingga 2,5x lipat. Ironisnya, banyak anak muda yang justru membuka medsos untuk mengatasi stres, padahal itu malah memperburuk siklus.</p>
+
+        <h3>3. Keputusan Finansial yang Buruk</h3>
+        <p>Otak yang lelah cenderung impulsif. Riset dari University of Chicago menunjukkan bahwa kurang tidur meningkatkan impulse buying hingga 40%. Jadi, doom scrolling di malam hari bisa juga menguras dompetmu secara tidak langsung.</p>
+
+        <div class="art-callout">
+          <div class="art-callout-title">Tahukah Kamu?</div>
+          <p>Rata-rata manusia membutuhkan 14 menit untuk tertidur setelah menutup mata. Namun setelah 30 menit scrolling medsos, angka ini meningkat menjadi 45 menit karena otak masih memproses informasi visual.</p>
+        </div>
+
+        <h2 id="s4">Cara Praktis Mengatasinya</h2>
+        <p>Kabar baiknya, kebiasaan ini bisa diperbaiki. Tidak perlu langsung detox total, mulai dari langkah kecil yang konsisten:</p>
+
+        <ol>
+          <li><strong>Set alarm "wind down"</strong> 1 jam sebelum waktu tidur targetmu. Ini pengingat untuk mulai mengurangi stimulasi digital.</li>
+          <li><strong>Ganti scrolling dengan membaca</strong>, baik buku fisik maupun e-reader tanpa backlight. Ini tetap memberikan "me-time" tanpa efek blue light.</li>
+          <li><strong>Aktifkan Night Mode</strong> di semua device-mu. Filter blue light memang tidak menghilangkan masalah sepenuhnya, tapi membantu mengurangi gangguan melatonin.</li>
+          <li><strong>Pindahkan charger ke luar kamar</strong>. Ini cara paling efektif menurut 82% responden yang berhasil memperbaiki pola tidurnya.</li>
+          <li><strong>Gunakan fitur Screen Time</strong> untuk set batas harian di aplikasi medsos. Mulai dari 2 jam, lalu turunkan bertahap.</li>
+        </ol>
+
+        <h2 id="s5">Penutup</h2>
+        <p>Digital wellness bukan tentang menghindari teknologi, tapi tentang membangun hubungan yang lebih sehat dengannya. Tidur yang cukup adalah fondasi dari produktivitas, kreativitas, dan kesehatan mental.</p>
+        <p>Malam ini, coba taruh ponselmu 30 menit lebih awal dari biasanya. Satu langkah kecil yang bisa mengubah kualitas hidupmu secara signifikan.</p>
+
+        <!-- Article Tags -->
+        <div class="art-tags-bottom">
+          <a href="#" class="art-btag">Mindfulness</a>
+          <a href="#" class="art-btag">Kesehatan Digital</a>
+          <a href="#" class="art-btag">Media Sosial</a>
+          <a href="#" class="art-btag">Gen Z</a>
+          <a href="#" class="art-btag">Pola Tidur</a>
+          <a href="#" class="art-btag">Digital Wellness</a>
+        </div>
+
+        <!-- Share -->
+        <div class="art-share">
+          <span class="art-share-label">Bagikan</span>
+          <button class="share-btn">X</button>
+          <button class="share-btn">IG</button>
+          <button class="share-btn">WA</button>
+          <button class="share-btn">LI</button>
+        </div>
+      </article>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+
+        <div class="sb-section">
+          <div class="sb-title">Daftar Isi</div>
+          <ul class="toc">
+            <li><a href="#s1" class="active">Fenomena Scrolling Malam Hari</a></li>
+            <li><a href="#s2">Apa Kata Riset Terbaru?</a></li>
+            <li><a href="#s3">Dampak Nyata yang Sering Diabaikan</a></li>
+            <li><a href="#s4">Cara Praktis Mengatasinya</a></li>
+            <li><a href="#s5">Penutup</a></li>
+          </ul>
+        </div>
+
+        <div class="sb-section">
+          <div class="sb-title">Artikel Terkait</div>
+          <ul class="sb-related">
+            <li><a href="#">
+              <div class="sb-rel-tag" style="color:var(--pink);">Design Skill</div>
+              <div class="sb-rel-title">10 Tools Figma yang Wajib Kamu Tahu di 2026</div>
+              <div class="sb-rel-date">3 Jun 2026</div>
+            </a></li>
+            <li><a href="#">
+              <div class="sb-rel-tag" style="color:#8fc21a;">Industry Insight</div>
+              <div class="sb-rel-title">Keuangan Makin Cepat dengan AI: Dampak Nyata di Fintech Indonesia</div>
+              <div class="sb-rel-date">1 Jun 2026</div>
+            </a></li>
+            <li><a href="#">
+              <div class="sb-rel-tag" style="color:var(--purple);">Edu Picks</div>
+              <div class="sb-rel-title">Top 10 App untuk Bantu Kamu Dapat Kerja Lebih Cepat</div>
+              <div class="sb-rel-date">28 Mei 2026</div>
+            </a></li>
+          </ul>
+        </div>
+
+        <div class="sb-section">
+          <div class="sb-newsletter">
+            <div class="sb-nl-title">Jangan Ketinggalan</div>
+            <p class="sb-nl-desc">Konten digital terbaik dari dipolis, langsung ke inbox kamu setiap minggu.</p>
+            <input type="email" class="sb-nl-input" placeholder="Email kamu...">
+            <button class="sb-nl-btn">Subscribe</button>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+  </div>
+</main>
+
+<!-- RELATED ARTICLES -->
+<section class="related-sec">
+  <div class="container">
+    <h2 style="font-family:'Outfit',sans-serif;font-weight:900;font-size:28px;letter-spacing:-.02em;color:var(--purple);margin-bottom:32px;">Baca Juga</h2>
+    <div class="related-grid">
+      <a href="#" class="rcard">
+        <div class="rcard-thumb" style="background:linear-gradient(135deg,#2a001a,#6b0033);"></div>
+        <div class="rcard-body">
+          <div class="rcard-tag" style="color:var(--pink);">Design Skill</div>
+          <div class="rcard-title">10 Tools Figma yang Wajib Kamu Tahu di 2026</div>
+          <div class="rcard-date">3 Jun 2026</div>
+          <span class="rcard-link">Baca Artikel &#8594;</span>
+        </div>
+      </a>
+      <a href="#" class="rcard">
+        <div class="rcard-thumb" style="background:linear-gradient(135deg,#0f1f00,#1a3300);"></div>
+        <div class="rcard-body">
+          <div class="rcard-tag" style="color:#8fc21a;">Industry Insight</div>
+          <div class="rcard-title">Keuangan Makin Cepat dengan AI: Dampak Nyata di Fintech Indonesia</div>
+          <div class="rcard-date">1 Jun 2026</div>
+          <span class="rcard-link">Baca Artikel &#8594;</span>
+        </div>
+      </a>
+      <a href="#" class="rcard">
+        <div class="rcard-thumb" style="background:linear-gradient(135deg,#4E0087,#1a0035);"></div>
+        <div class="rcard-body">
+          <div class="rcard-tag" style="color:var(--purple);">Edu Picks</div>
+          <div class="rcard-title">Top 10 App untuk Bantu Kamu Dapat Kerja Lebih Cepat</div>
+          <div class="rcard-date">28 Mei 2026</div>
+          <span class="rcard-link">Baca Artikel &#8594;</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="fb-logo">
+          <img src="logo-white.png" alt="dipolis logo" style="width:32px;height:32px;">
+          <span class="fb-logo-text">dipolis</span>
+        </div>
+        <p class="fb-desc">Platform media dan edukasi literasi digital untuk anak muda Indonesia. Konten berkualitas, gratis, selalu relevan. Berdiri sejak 2023.</p>
+        <div class="socials">
+          <a href="#" class="sbtn">IG</a>
+          <a href="#" class="sbtn">TT</a>
+          <a href="#" class="sbtn">YT</a>
+        </div>
+      </div>
+      <div>
+        <div class="fcol-title">Topik</div>
+        <ul class="flinks">
+          <li><a href="#">Mindfulness &amp; Case Study</a></li>
+          <li><a href="#">Design Skill</a></li>
+          <li><a href="#">News &amp; Update</a></li>
+          <li><a href="#">Industry Insight</a></li>
+          <li><a href="#">Edu Picks</a></li>
+          <li><a href="#">Culture Spotlight</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="fcol-title">Platform</div>
+        <ul class="flinks">
+          <li><a href="#">Semua Artikel</a></li>
+          <li><a href="#">Skill Up</a></li>
+          <li><a href="#">Layanan</a></li>
+          <li><a href="#">Tanya dipolis</a></li>
+          <li><a href="#">Newsletter</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="fcol-title">Info</div>
+        <ul class="flinks">
+          <li><a href="#">Tentang Kami</a></li>
+          <li><a href="#">Tim Editorial</a></li>
+          <li><a href="#">Advertise</a></li>
+          <li><a href="#">Kontak</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <div class="fcopy">&copy; 2023 <b>dipolis.id</b>. All rights reserved. Made with &#9829; for Indonesian youth.</div>
+      <div class="fbot-r"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nb = document.getElementById('nb');
+  window.addEventListener('scroll', () => nb.classList.toggle('scrolled', scrollY > 20));
+
+  // TOC active state on scroll
+  const sections = document.querySelectorAll('.art-body h2[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    tocLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+</script>
+</body>
+</html>
