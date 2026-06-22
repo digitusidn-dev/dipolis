@@ -151,6 +151,7 @@
     .fcard-exc { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
     .fcard-link { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--purple); display: inline-flex; align-items: center; gap: 6px; transition: gap .2s; }
     .fcard:hover .fcard-link { gap: 10px; }
+    .fcard-link::after { content: ''; position: absolute; inset: 0; z-index: 5; }
     .thumb-pat { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px); background-size: 16px 16px; }
     .thumb-strip { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
     .thumb-strip-p { background: rgba(192,132,252,.75); }
@@ -818,6 +819,7 @@
 </script>
 </body>
 </html>
+
 
 
 
