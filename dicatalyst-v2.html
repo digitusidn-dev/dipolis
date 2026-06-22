@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DICATALYST — Unlocking the Power of Digital Society</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #4E0087;
+      --purple-light: #6b00b8;
+      --lime: #DAFF72;
+      --pink: #FF3F84;
+      --black: #060608;
+      --white: #FFFFFF;
+      --surface: #0f0f12;
+      --surface-2: #161619;
+      --border: #242428;
+      --text-muted: rgba(255,255,255,.52);
+      --text-dim: rgba(255,255,255,.32);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+
+    /* ─── BUTTONS ─── */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: all .22s; border-radius: 100px; letter-spacing: .01em; }
+    .btn-lime { background: var(--lime); color: #000; }
+    .btn-lime:hover { background: #caef5a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(218,255,114,.25); }
+    .btn-outline { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,.25); }
+    .btn-outline:hover { border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.06); transform: translateY(-2px); }
+    .btn-purple { background: var(--purple); color: var(--white); }
+    .btn-purple:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(78,0,135,.4); }
+    .btn-white { background: var(--white); color: #000; }
+    .btn-white:hover { background: #f0f0f0; transform: translateY(-2px); }
+    .btn-sm { padding: 9px 18px; font-size: 13px; }
+
+    /* ─── TAGS ─── */
+    .tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 5px 11px; border-radius: 100px; }
+    .tag-p { background: rgba(78,0,135,.55); color: #c084fc; border: 1px solid rgba(78,0,135,.8); }
+    .tag-l { background: rgba(218,255,114,.15); color: var(--lime); border: 1px solid rgba(218,255,114,.3); }
+    .tag-k { background: rgba(255,63,132,.15); color: var(--pink); border: 1px solid rgba(255,63,132,.3); }
+
+    /* ─── SECTION HEADERS ─── */
+    .sh { text-align: center; margin-bottom: 48px; }
+    .sh-eye { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--lime); margin-bottom: 14px; }
+    .sh-title { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(28px, 4vw, 52px); letter-spacing: -.03em; line-height: 1.05; }
+    .sh-sub { font-size: 15px; color: var(--text-muted); max-width: 560px; margin: 14px auto 0; line-height: 1.7; }
+
+    /* ─── NAVBAR ─── */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all .3s; }
+    .navbar-bg { background: rgba(6,6,8,.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-inner { display: flex; align-items: center; height: 68px; gap: 32px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 16px; letter-spacing: -.02em; text-transform: uppercase; flex-shrink: 0; }
+    .logomark { width: 34px; height: 34px; background: var(--purple); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; color: var(--lime); }
+    .logo-acc { color: var(--lime); }
+    .nav-links { display: flex; list-style: none; gap: 2px; flex: 1; justify-content: center; }
+    .nav-links a { display: block; padding: 7px 14px; font-size: 13px; font-weight: 600; color: var(--text-muted); border-radius: 8px; transition: all .18s; }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,.07); }
+    .nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--white); transition: all .3s; border-radius: 2px; }
+
+    /* Mobile menu */
+    .mob { display: none; position: fixed; top: 68px; left: 0; right: 0; bottom: 0; background: var(--black); z-index: 999; padding: 32px 28px; overflow-y: auto; }
+    .mob.open { display: flex; flex-direction: column; gap: 4px; }
+    .mob a { display: block; padding: 16px 0; font-size: 18px; font-weight: 700; border-bottom: 1px solid var(--border); color: rgba(255,255,255,.75); }
+    .mob a:last-child { border: none; color: var(--lime); margin-top: 16px; }
+
+    /* ─── HERO ─── */
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; padding-top: 68px; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 10% 60%, rgba(78,0,135,.6) 0%, transparent 55%), radial-gradient(ellipse 50% 50% at 90% 10%, rgba(218,255,114,.06) 0%, transparent 55%); }
+    .hero-dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px); background-size: 32px 32px; }
+    .hblob { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+    .hblob-1 { width: 600px; height: 600px; top: -150px; right: -100px; background: radial-gradient(circle, rgba(78,0,135,.65) 0%, transparent 70%); animation: hbf 10s ease-in-out infinite alternate; }
+    .hblob-2 { width: 300px; height: 300px; bottom: 50px; left: 100px; background: radial-gradient(circle, rgba(218,255,114,.12) 0%, transparent 70%); animation: hbf 7s ease-in-out infinite alternate-reverse; }
+    @keyframes hbf { from { transform: translate(0,0) scale(1); } to { transform: translate(20px,-20px) scale(1.06); } }
+
+    .hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; padding: 80px 0; width: 100%; }
+    .hero-left {}
+    .hero-badge-top { display: inline-flex; align-items: center; gap: 8px; background: rgba(78,0,135,.4); border: 1px solid rgba(78,0,135,.8); padding: 6px 14px 6px 8px; border-radius: 100px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,.85); margin-bottom: 28px; }
+    .hbadge-dot { width: 7px; height: 7px; background: var(--lime); border-radius: 50%; animation: pdot 2s ease-in-out infinite; }
+    @keyframes pdot { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+    .hero-h1 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(44px, 6vw, 80px); line-height: .95; letter-spacing: -.04em; text-transform: uppercase; margin-bottom: 24px; }
+    .hero-h1 em { font-style: italic; color: var(--lime); }
+    .hero-sub { font-size: 16px; color: var(--text-muted); line-height: 1.75; max-width: 440px; margin-bottom: 36px; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 52px; }
+    .hero-stats { display: flex; gap: 32px; }
+    .hstat { }
+    .hstat-n { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 26px; color: var(--lime); line-height: 1; }
+    .hstat-l { font-size: 11px; font-weight: 500; color: var(--text-dim); margin-top: 3px; }
+
+    /* Hero right — visual card stack */
+    .hero-right { position: relative; height: 520px; }
+    .hero-visual-main { position: absolute; top: 0; left: 0; right: 60px; bottom: 60px; background: linear-gradient(135deg, #4E0087 0%, #2a004a 60%, #0a0010 100%); border-radius: 24px; overflow: hidden; }
+    .hvm-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(218,255,114,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(218,255,114,.06) 1px, transparent 1px); background-size: 36px 36px; }
+    .hvm-blob { position: absolute; top: -30px; right: -30px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(218,255,114,.25) 0%, transparent 70%); border-radius: 50%; filter: blur(40px); }
+    .hvm-content { position: absolute; bottom: 28px; left: 28px; right: 28px; }
+    .hvm-label { font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--lime); margin-bottom: 8px; }
+    .hvm-text { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 22px; line-height: 1.15; text-transform: uppercase; letter-spacing: -.02em; }
+    .hvm-meta { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+
+    .hero-card-float { position: absolute; bottom: 0; right: 0; width: 220px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; animation: cfloat 4s ease-in-out infinite alternate; }
+    @keyframes cfloat { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+    .hcf-eye { font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--pink); margin-bottom: 8px; }
+    .hcf-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 14px; line-height: 1.3; margin-bottom: 10px; }
+    .hcf-stat { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 32px; color: var(--lime); line-height: 1; }
+    .hcf-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    .hero-pill { position: absolute; top: 40px; right: 20px; background: rgba(218,255,114,.12); border: 1px solid rgba(218,255,114,.25); border-radius: 100px; padding: 8px 16px; font-size: 12px; font-weight: 600; color: var(--lime); animation: cfloat 5s ease-in-out infinite alternate-reverse; }
+
+    /* ─── TICKER ─── */
+    .ticker { background: var(--purple); overflow: hidden; padding: 15px 0; position: relative; }
+    .ticker::before, .ticker::after { content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none; }
+    .ticker::before { left: 0; background: linear-gradient(90deg, var(--purple), transparent); }
+    .ticker::after { right: 0; background: linear-gradient(-90deg, var(--purple), transparent); }
+    .tick-track { display: flex; white-space: nowrap; animation: tickroll 24s linear infinite; }
+    .tick-track:hover { animation-play-state: paused; }
+    @keyframes tickroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .titem { display: inline-flex; align-items: center; gap: 14px; padding: 0 32px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); }
+    .titem .tn { color: var(--lime); font-size: 10px; }
+    .titem .td { width: 4px; height: 4px; background: var(--lime); border-radius: 50%; flex-shrink: 0; opacity: .7; }
+
+    /* ─── FEATURED ARTICLES (horizontal scroll, like events row) ─── */
+    .featured { padding: 96px 0; }
+    .feat-scroll-wrap { position: relative; }
+    .feat-scroll { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; }
+    .feat-scroll::-webkit-scrollbar { display: none; }
+    .feat-scroll-nav { display: flex; justify-content: center; gap: 8px; margin-top: 32px; }
+    .scroll-arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; font-size: 18px; color: var(--text-muted); }
+    .scroll-arrow:hover { background: var(--purple); border-color: var(--purple); color: #fff; }
+
+    .fcard { flex: 0 0 340px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: transform .25s, box-shadow .25s; }
+    .fcard:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,.5); }
+    .fcard-thumb { height: 200px; position: relative; overflow: hidden; }
+    .fcard-thumb-img { position: absolute; inset: 0; transition: transform .5s; }
+    .fcard:hover .fcard-thumb-img { transform: scale(1.05); }
+    .fcard-body { padding: 22px 22px 26px; }
+    .fcard-date { font-size: 11px; font-weight: 600; color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .fcard-date::before { content: ''; display: inline-block; width: 18px; height: 1px; background: var(--border); }
+    .fcard-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 17px; line-height: 1.3; letter-spacing: -.01em; margin-bottom: 10px; }
+    .fcard-exc { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
+    .fcard-link { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--lime); display: inline-flex; align-items: center; gap: 6px; transition: gap .2s; }
+    .fcard:hover .fcard-link { gap: 10px; }
+
+    /* Thumb colors */
+    .thumb-purple { background: linear-gradient(135deg, #4E0087, #1a0035); }
+    .thumb-pink { background: linear-gradient(135deg, #2a001a, #6b0033); }
+    .thumb-lime { background: linear-gradient(135deg, #0f1f00, #1a3300); }
+    .thumb-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .thumb-num { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 80px; color: rgba(255,255,255,.08); line-height: 1; }
+    .thumb-pattern { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px); background-size: 16px 16px; }
+
+    /* ─── STATS SECTION (like "Did you know?") ─── */
+    .stats-section { padding: 96px 0; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stats-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .stats-visual { position: relative; }
+    .stats-visual-card { background: var(--black); border: 1px solid var(--border); border-radius: 24px; padding: 36px; position: relative; overflow: hidden; }
+    .svc-glow { position: absolute; top: -80px; right: -80px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(78,0,135,.5) 0%, transparent 70%); border-radius: 50%; filter: blur(50px); }
+    .svc-label { font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 20px; }
+    .svc-main-num { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 96px; line-height: .9; letter-spacing: -.04em; color: var(--lime); }
+    .svc-main-text { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 32px; line-height: 1; letter-spacing: -.02em; color: var(--white); margin-top: 4px; }
+    .svc-desc { font-size: 13px; color: var(--text-muted); margin-top: 16px; line-height: 1.65; }
+    .svc-mini-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 24px; background: var(--border); border-radius: 12px; overflow: hidden; }
+    .svc-mini { background: var(--surface); padding: 16px; }
+    .svc-mini-n { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 22px; }
+    .svc-mini-l { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+    .stats-text .sh { text-align: left; }
+    .stats-text .sh .sh-sub { margin-left: 0; max-width: 420px; }
+    .stats-list { list-style: none; margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+    .stats-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .stats-list li::before { content: ''; flex-shrink: 0; width: 6px; height: 6px; background: var(--lime); border-radius: 50%; margin-top: 8px; }
+
+    /* ─── CONTENT PILLARS (like "Ways to Give" — centered, 3 rounded cards) ─── */
+    .pillars { padding: 96px 0; }
+    .pillars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .pcell { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; cursor: pointer; transition: all .25s; position: relative; overflow: hidden; }
+    .pcell::before { content: ''; position: absolute; inset: 0; border-radius: var(--radius); opacity: 0; transition: opacity .3s; }
+    .pcell:hover { transform: translateY(-4px); border-color: rgba(78,0,135,.5); box-shadow: 0 16px 48px rgba(0,0,0,.4); }
+    .pcell-p::before { background: radial-gradient(circle at top right, rgba(78,0,135,.2), transparent 60%); }
+    .pcell-k::before { background: radial-gradient(circle at top right, rgba(255,63,132,.12), transparent 60%); }
+    .pcell-l::before { background: radial-gradient(circle at top right, rgba(218,255,114,.08), transparent 60%); }
+    .pcell:hover::before { opacity: 1; }
+    .pcell-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; position: relative; z-index: 1; }
+    .pci-purple { background: rgba(78,0,135,.35); }
+    .pci-pink { background: rgba(255,63,132,.18); }
+    .pci-lime { background: rgba(218,255,114,.12); }
+    .pcell-num { position: absolute; top: 20px; right: 24px; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 11px; letter-spacing: .15em; color: rgba(255,255,255,.18); }
+    .pcell-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -.01em; line-height: 1.25; margin-bottom: 10px; position: relative; z-index: 1; }
+    .pcell-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 24px; position: relative; z-index: 1; }
+    .pcell .btn { position: relative; z-index: 1; }
+
+    /* ─── SKILL UP CTA (like "Need food now?" — colored bg, floating white card) ─── */
+    .skillup { padding: 80px 0; background: var(--purple); position: relative; overflow: hidden; }
+    .skillup-bg-blob { position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(218,255,114,.18) 0%, transparent 65%); border-radius: 50%; filter: blur(60px); }
+    .skillup-bg-blob-2 { position: absolute; bottom: -80px; left: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,63,132,.2) 0%, transparent 65%); border-radius: 50%; filter: blur(60px); }
+    .skillup-card { position: relative; z-index: 1; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 52px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; backdrop-filter: blur(10px); }
+    .sc-eye { font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--lime); margin-bottom: 14px; }
+    .sc-title { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(28px, 3.5vw, 44px); line-height: 1.05; letter-spacing: -.03em; margin-bottom: 16px; }
+    .sc-title span { color: var(--lime); }
+    .sc-desc { font-size: 14px; color: rgba(255,255,255,.7); line-height: 1.75; margin-bottom: 28px; }
+    .sc-right { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: rgba(255,255,255,.06); border-radius: 16px; overflow: hidden; }
+    .sc-stat { padding: 28px 24px; background: rgba(255,255,255,.04); text-align: center; }
+    .sc-stat-n { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 36px; line-height: 1; margin-bottom: 6px; }
+    .sc-stat-l { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5); }
+
+    /* ─── LATEST ARTICLES mixed grid ─── */
+    .latest { padding: 96px 0; background: var(--surface); border-top: 1px solid var(--border); }
+    .latest-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; margin-bottom: 40px; }
+    .art-main { background: var(--black); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: all .25s; }
+    .art-main:hover { border-color: rgba(78,0,135,.5); box-shadow: 0 16px 48px rgba(0,0,0,.5); }
+    .art-main-thumb { height: 260px; position: relative; overflow: hidden; background: linear-gradient(135deg, #4E0087 0%, #1a0035 60%, #000 100%); }
+    .art-main-pat { position: absolute; inset: 0; background-image: linear-gradient(rgba(218,255,114,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(218,255,114,.05) 1px, transparent 1px); background-size: 32px 32px; }
+    .art-main-blob { position: absolute; top: -40px; right: -40px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(218,255,114,.2) 0%, transparent 70%); border-radius: 50%; filter: blur(40px); }
+    .art-main-body { padding: 28px; }
+    .art-side { display: flex; flex-direction: column; gap: 16px; }
+    .art-small { background: var(--black); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; cursor: pointer; transition: all .25s; display: flex; flex-direction: column; flex: 1; }
+    .art-small:hover { border-color: rgba(255,63,132,.4); transform: translateX(4px); }
+    .art-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 16px; line-height: 1.3; letter-spacing: -.01em; margin: 10px 0 8px; }
+    .art-exc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .art-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .art-date { font-size: 11px; color: var(--text-dim); letter-spacing: .08em; }
+    .art-rd { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--lime); transition: letter-spacing .2s; }
+    .art-main:hover .art-rd, .art-small:hover .art-rd { letter-spacing: .14em; }
+
+    /* ─── TANYA SECTION ─── */
+    .tanya { padding: 96px 0; }
+    .tanya-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+    .tanya-left .sh { text-align: left; }
+    .tanya-left .sh .sh-sub { margin-left: 0; }
+    .tanya-left .sh-eye { color: var(--pink); }
+    .ttags { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 32px; }
+    .ttag { padding: 8px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all .2s; }
+    .ttag:hover, .ttag.on { background: rgba(255,63,132,.12); border-color: rgba(255,63,132,.4); color: var(--white); }
+    .tanya-right { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .tstat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 24px; text-align: center; transition: all .25s; }
+    .tstat:hover { border-color: rgba(218,255,114,.3); transform: translateY(-3px); }
+    .tstat-n { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 42px; line-height: 1; margin-bottom: 8px; }
+    .tstat-l { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); }
+
+    /* ─── NEWSLETTER (floating card on colored bg) ─── */
+    .newsletter { padding: 64px 0; background: var(--purple); position: relative; overflow: hidden; }
+    .nl-bg1 { position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(218,255,114,.18) 0%, transparent 65%); border-radius: 50%; filter: blur(60px); }
+    .nl-bg2 { position: absolute; bottom: -60px; left: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,63,132,.2) 0%, transparent 65%); border-radius: 50%; filter: blur(50px); }
+    .nl-card { position: relative; z-index: 1; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 44px 48px; display: flex; align-items: center; gap: 48px; backdrop-filter: blur(10px); }
+    .nl-icon { width: 56px; height: 56px; background: var(--lime); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .nl-text { flex: 1; }
+    .nl-text h3 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(18px, 2vw, 26px); letter-spacing: -.02em; margin-bottom: 4px; }
+    .nl-text p { font-size: 14px; color: rgba(255,255,255,.65); }
+    .nl-form { display: flex; gap: 0; flex-shrink: 0; }
+    .nl-input { background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.2); border-right: none; padding: 14px 20px; font-size: 14px; color: var(--white); font-family: 'Space Grotesk', sans-serif; border-radius: 100px 0 0 100px; outline: none; min-width: 240px; }
+    .nl-input::placeholder { color: rgba(255,255,255,.35); }
+    .nl-input:focus { border-color: var(--lime); }
+    .nl-btn { background: var(--lime); color: #000; border: none; padding: 14px 26px; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; border-radius: 0 100px 100px 0; transition: background .2s; white-space: nowrap; }
+    .nl-btn:hover { background: #caef5a; }
+
+    /* ─── FOOTER ─── */
+    .footer { background: var(--surface); border-top: 1px solid var(--border); }
+    .footer-top { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    .footer-top-inner { display: grid; grid-template-columns: 1fr auto auto; gap: 24px; align-items: center; }
+    .fb-logo { display: flex; align-items: center; gap: 10px; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 16px; text-transform: uppercase; margin-bottom: 10px; }
+    .fb-desc { font-size: 13px; color: var(--text-muted); max-width: 300px; line-height: 1.6; }
+    .footer-cta-card { background: var(--black); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; min-width: 220px; }
+    .fcc-label { font-size: 11px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+    .fcc-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 16px; margin-bottom: 6px; }
+    .fcc-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px; }
+
+    .footer-main { padding: 48px 0; }
+    .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+    .fcol-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .flinks { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .flinks a { font-size: 13px; color: rgba(255,255,255,.5); transition: color .18s; }
+    .flinks a:hover { color: var(--lime); }
+    .socials { display: flex; gap: 8px; margin-top: 20px; }
+    .sbtn { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .2s; color: var(--text-muted); }
+    .sbtn:hover { background: var(--purple); border-color: var(--purple); color: var(--lime); }
+    .footer-bot { border-top: 1px solid var(--border); padding: 20px 0; display: flex; align-items: center; justify-content: space-between; }
+    .fcopy { font-size: 12px; color: var(--text-dim); }
+    .fcopy b { color: var(--lime); font-weight: 700; }
+    .fbot-r { display: flex; gap: 20px; }
+    .fbot-r a { font-size: 11px; color: var(--text-dim); letter-spacing: .08em; text-transform: uppercase; transition: color .18s; }
+    .fbot-r a:hover { color: var(--white); }
+
+    /* ─── FADE-UP ─── */
+    .fu { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+    .fu.vis { opacity: 1; transform: translateY(0); }
+    .fd1 { transition-delay: .1s; } .fd2 { transition-delay: .2s; } .fd3 { transition-delay: .3s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .stats-inner { grid-template-columns: 1fr; gap: 48px; }
+      .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+      .skillup-card { grid-template-columns: 1fr; gap: 32px; }
+      .latest-grid { grid-template-columns: 1fr; }
+      .nl-card { flex-direction: column; gap: 28px; text-align: center; }
+      .nl-form { width: 100%; justify-content: center; }
+      .footer-top-inner { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .tanya-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-right .btn { display: none; }
+      .hamburger { display: flex; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .fcard { flex: 0 0 280px; }
+      .sc-right { grid-template-columns: 1fr 1fr; }
+      .footer-top-inner { grid-template-columns: 1fr; }
+      .footer-cta-card { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-bot { flex-direction: column; gap: 12px; text-align: center; }
+      .nl-card { padding: 32px 24px; }
+      .nl-form { flex-direction: column; width: 100%; }
+      .nl-input { border-right: 1px solid rgba(255,255,255,.2); border-radius: 100px; min-width: unset; }
+      .nl-btn { border-radius: 100px; padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ NAVBAR ══════════════ -->
+<nav class="navbar navbar-bg" id="nb">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="logomark">D</div>
+        DICA<span class="logo-acc">TALYST</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#artikel">Artikel</a></li>
+        <li><a href="#topik">Topik</a></li>
+        <li><a href="#skillup">Skill Up</a></li>
+        <li><a href="#tanya">Tanya Dicatalyst</a></li>
+        <li><a href="#tentang">Tentang</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="#artikel" class="btn btn-outline btn-sm">Baca Artikel</a>
+        <a href="#newsletter" class="btn btn-lime btn-sm">Newsletter</a>
+        <button class="hamburger" id="hbg"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="mob" id="mob">
+  <a href="#artikel">Artikel</a>
+  <a href="#topik">Topik</a>
+  <a href="#skillup">Skill Up</a>
+  <a href="#tanya">Tanya Dicatalyst</a>
+  <a href="#tentang">Tentang</a>
+  <a href="#newsletter">Newsletter →</a>
+</div>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hblob hblob-1"></div>
+  <div class="hblob hblob-2"></div>
+
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-badge-top">
+          <div class="hbadge-dot"></div>
+          Digital Literacy Platform untuk Gen Z Indonesia
+        </div>
+        <h1 class="hero-h1">
+          Unlock<br>
+          The <em>Power</em><br>
+          Of Digital<br>
+          Society.
+        </h1>
+        <p class="hero-sub">Platform media dan edukasi literasi digital untuk anak muda Indonesia. Konten berkualitas, 100% gratis, dan selalu relevan.</p>
+        <div class="hero-cta">
+          <a href="#artikel" class="btn btn-lime">Jelajahi Artikel</a>
+          <a href="#tentang" class="btn btn-outline">Tentang Kami</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat">
+            <div class="hstat-n">6</div>
+            <div class="hstat-l">Topik Utama</div>
+          </div>
+          <div class="hstat" style="margin-left:32px;padding-left:32px;border-left:1px solid var(--border);">
+            <div class="hstat-n">100%</div>
+            <div class="hstat-l">Gratis</div>
+          </div>
+          <div class="hstat" style="margin-left:32px;padding-left:32px;border-left:1px solid var(--border);">
+            <div class="hstat-n">Gen Z</div>
+            <div class="hstat-l">Focused</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-visual-main">
+          <div class="hvm-grid"></div>
+          <div class="hvm-blob"></div>
+          <div class="hvm-content">
+            <div class="hvm-label">Featured — Jun 2026</div>
+            <div class="hvm-text">Scrolling &amp; Insomnia:<br>Cara Berhenti<br>Sebelum Tidur</div>
+            <div class="hvm-meta">8 min baca · Mindfulness</div>
+          </div>
+        </div>
+        <div class="hero-card-float">
+          <div class="hcf-eye">Culture Spotlight</div>
+          <div class="hcf-title">Pekerjaan yang Mulai Hilang 2025–2030</div>
+          <div class="hcf-stat">62%</div>
+          <div class="hcf-sub">pekerjaan terdampak AI</div>
+        </div>
+        <div class="hero-pill">📊 6 Content Pillars</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TICKER ══════════════ -->
+<div class="ticker">
+  <div class="tick-track">
+    <span class="titem"><span class="tn">01</span>Mindfulness &amp; Case Study<span class="td"></span></span>
+    <span class="titem"><span class="tn">02</span>Design Skill<span class="td"></span></span>
+    <span class="titem"><span class="tn">03</span>News &amp; Update<span class="td"></span></span>
+    <span class="titem"><span class="tn">04</span>Industry Insight<span class="td"></span></span>
+    <span class="titem"><span class="tn">05</span>Educational Recom<span class="td"></span></span>
+    <span class="titem"><span class="tn">06</span>Culture Spotlight<span class="td"></span></span>
+    <span class="titem"><span class="tn">01</span>Mindfulness &amp; Case Study<span class="td"></span></span>
+    <span class="titem"><span class="tn">02</span>Design Skill<span class="td"></span></span>
+    <span class="titem"><span class="tn">03</span>News &amp; Update<span class="td"></span></span>
+    <span class="titem"><span class="tn">04</span>Industry Insight<span class="td"></span></span>
+    <span class="titem"><span class="tn">05</span>Educational Recom<span class="td"></span></span>
+    <span class="titem"><span class="tn">06</span>Culture Spotlight<span class="td"></span></span>
+  </div>
+</div>
+
+<!-- ══════════════ FEATURED ARTICLES (horizontal scroll) ══════════════ -->
+<section class="featured" id="artikel">
+  <div class="container">
+    <div class="sh fu">
+      <div class="sh-eye">✦ Artikel Terbaru</div>
+      <h2 class="sh-title">Konten Pilihan<br>Minggu Ini</h2>
+      <p class="sh-sub">Artikel kurasi dari tim editorial kami, dipilih khusus untuk kamu yang ingin grow di era digital.</p>
+    </div>
+
+    <div class="feat-scroll-wrap fu fd1">
+      <div class="feat-scroll" id="fscroll">
+        <!-- Card 1 -->
+        <div class="fcard">
+          <div class="fcard-thumb thumb-purple">
+            <div class="thumb-pattern"></div>
+            <div class="thumb-overlay"><div class="thumb-num">01</div></div>
+          </div>
+          <div class="fcard-body">
+            <span class="tag tag-p">Mindfulness</span>
+            <div class="fcard-date">5 Jun 2026 · 8 min baca</div>
+            <div class="fcard-title">Scrolling Tanpa Henti: Bagaimana Media Sosial Merusak Pola Tidurmu</div>
+            <div class="fcard-exc">Studi terbaru ungkap korelasi kuat antara penggunaan medsos malam hari dan kualitas tidur Gen Z.</div>
+            <span class="fcard-link">Baca Artikel →</span>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="fcard">
+          <div class="fcard-thumb thumb-pink">
+            <div class="thumb-pattern"></div>
+            <div class="thumb-overlay"><div class="thumb-num">02</div></div>
+          </div>
+          <div class="fcard-body">
+            <span class="tag tag-k">Design Skill</span>
+            <div class="fcard-date">3 Jun 2026 · 6 min baca</div>
+            <div class="fcard-title">10 Tools Figma yang Wajib Kamu Tahu di 2026</div>
+            <div class="fcard-exc">Dari auto-layout sampai variables — tools ini akan mengubah cara kamu desain selamanya.</div>
+            <span class="fcard-link">Baca Artikel →</span>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="fcard">
+          <div class="fcard-thumb thumb-lime">
+            <div class="thumb-pattern"></div>
+            <div class="thumb-overlay"><div class="thumb-num">03</div></div>
+          </div>
+          <div class="fcard-body">
+            <span class="tag tag-l">Industry Insight</span>
+            <div class="fcard-date">1 Jun 2026 · 10 min baca</div>
+            <div class="fcard-title">Keuangan Makin Cepat dengan AI: Dampak Nyata di Fintech Indonesia</div>
+            <div class="fcard-exc">Bagaimana AI mengubah cara jutaan orang Indonesia mengelola keuangan mereka sehari-hari.</div>
+            <span class="fcard-link">Baca Artikel →</span>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="fcard">
+          <div class="fcard-thumb thumb-purple">
+            <div class="thumb-pattern"></div>
+            <div class="thumb-overlay"><div class="thumb-num">04</div></div>
+          </div>
+          <div class="fcard-body">
+            <span class="tag tag-p">Educational Recom</span>
+            <div class="fcard-date">28 Mei 2026 · 5 min baca</div>
+            <div class="fcard-title">Top 10 App untuk Bantu Kamu Dapat Kerja Lebih Cepat</div>
+            <div class="fcard-exc">Dari LinkedIn optimizer sampai portfolio builder — 10 tools yang dipakai para job seeker sukses.</div>
+            <span class="fcard-link">Baca Artikel →</span>
+          </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="fcard">
+          <div class="fcard-thumb thumb-pink">
+            <div class="thumb-pattern"></div>
+            <div class="thumb-overlay"><div class="thumb-num">05</div></div>
+          </div>
+          <div class="fcard-body">
+            <span class="tag tag-k">Culture Spotlight</span>
+            <div class="fcard-date">25 Mei 2026 · 7 min baca</div>
+            <div class="fcard-title">Pekerjaan Masa Depan 2025–2030: Mana Naik, Mana Mulai Hilang?</div>
+            <div class="fcard-exc">Laporan WEF terbaru tentang profesi yang terdampak otomasi AI — siapkah kamu menghadapinya?</div>
+            <span class="fcard-link">Baca Artikel →</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat-scroll-nav">
+        <button class="scroll-arrow" id="prev">←</button>
+        <button class="scroll-arrow" id="next">→</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ STATS (Did you know?) ══════════════ -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-inner">
+      <div class="stats-visual fu">
+        <div class="stats-visual-card">
+          <div class="svc-glow"></div>
+          <div class="svc-label">Fakta Digital Indonesia 2026</div>
+          <div class="svc-main-num">77%</div>
+          <div class="svc-main-text">Gen Z Merasa<br>Tidak Siap Digital</div>
+          <div class="svc-desc">Mayoritas anak muda Indonesia merasa kurang memiliki keterampilan digital yang dibutuhkan industri. Dicatalyst hadir untuk mengubah itu.</div>
+          <div class="svc-mini-stats">
+            <div class="svc-mini">
+              <div class="svc-mini-n" style="color:var(--lime);">62%</div>
+              <div class="svc-mini-l">Pekerjaan akan berubah karena AI</div>
+            </div>
+            <div class="svc-mini">
+              <div class="svc-mini-n" style="color:var(--pink);">1 dari 3</div>
+              <div class="svc-mini-l">lulusan kesulitan menemukan kerja</div>
+            </div>
+            <div class="svc-mini">
+              <div class="svc-mini-n" style="color:#c084fc;">4x</div>
+              <div class="svc-mini-l">demand skill digital vs supply</div>
+            </div>
+            <div class="svc-mini">
+              <div class="svc-mini-n" style="color:var(--lime);">2030</div>
+              <div class="svc-mini-l">target Indonesia digital nation</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-text fu fd2">
+        <div class="sh" style="text-align:left;">
+          <div class="sh-eye">Mengapa Penting?</div>
+          <h2 class="sh-title">Literasi Digital<br>Bukan <em style="color:var(--lime);font-style:italic;">Pilihan</em></h2>
+          <p class="sh-sub" style="margin-left:0;">Di era di mana teknologi mendefinisikan karir dan kehidupan, kemampuan memahami dunia digital adalah kebutuhan dasar — bukan kemewahan.</p>
+        </div>
+        <ul class="stats-list">
+          <li>Konten dalam Bahasa Indonesia yang mudah dipahami tanpa background teknis</li>
+          <li>Panduan praktis yang langsung bisa diterapkan, bukan teori abstrak</li>
+          <li>Update mingguan mengikuti perkembangan industri terkini</li>
+          <li>Gratis selamanya — karena literasi digital harus bisa diakses semua orang</li>
+        </ul>
+        <a href="#topik" class="btn btn-lime" style="margin-top:32px;">Mulai Belajar Sekarang</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CONTENT PILLARS (Ways to Give style) ══════════════ -->
+<section class="pillars" id="topik">
+  <div class="container">
+    <div class="sh fu">
+      <div class="sh-eye">✦ Content Pillars</div>
+      <h2 class="sh-title">6 Topik yang<br>Kami Kuasai</h2>
+      <p class="sh-sub">Setiap topik dirancang untuk memberikan insight mendalam dan panduan praktis yang relevan dengan kebutuhan Gen Z Indonesia.</p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pcell pcell-p fu">
+        <div class="pcell-num">01</div>
+        <div class="pcell-icon pci-purple">🧠</div>
+        <div class="pcell-title">Mindfulness &amp; Case Study</div>
+        <div class="pcell-desc">Kesehatan digital, keseimbangan hidup di era teknologi, dan studi kasus nyata dari industri global.</div>
+        <a href="#" class="btn btn-purple btn-sm">Lihat Topik</a>
+      </div>
+      <div class="pcell pcell-k fu fd1">
+        <div class="pcell-num">02</div>
+        <div class="pcell-icon pci-pink">🎨</div>
+        <div class="pcell-title">Design Skill</div>
+        <div class="pcell-desc">Tutorial desain, tips tools kreatif, dan panduan upgrade skill dari pemula hingga profesional.</div>
+        <a href="#" class="btn btn-sm" style="background:rgba(255,63,132,.15);color:var(--pink);border:1px solid rgba(255,63,132,.3);">Lihat Topik</a>
+      </div>
+      <div class="pcell pcell-l fu fd2">
+        <div class="pcell-num">03</div>
+        <div class="pcell-icon pci-lime">📰</div>
+        <div class="pcell-title">News &amp; Update</div>
+        <div class="pcell-desc">Berita terkini dari dunia digital, teknologi, dan industri kreatif yang selalu relevan buat kamu.</div>
+        <a href="#" class="btn btn-sm" style="background:rgba(218,255,114,.12);color:var(--lime);border:1px solid rgba(218,255,114,.25);">Lihat Topik</a>
+      </div>
+      <div class="pcell pcell-l fu">
+        <div class="pcell-num">04</div>
+        <div class="pcell-icon pci-lime">📊</div>
+        <div class="pcell-title">Industry Insight</div>
+        <div class="pcell-desc">Data, tren, dan insight mendalam tentang lanskap industri digital di Indonesia dan global.</div>
+        <a href="#" class="btn btn-sm" style="background:rgba(218,255,114,.12);color:var(--lime);border:1px solid rgba(218,255,114,.25);">Lihat Topik</a>
+      </div>
+      <div class="pcell pcell-p fu fd1">
+        <div class="pcell-num">05</div>
+        <div class="pcell-icon pci-purple">📚</div>
+        <div class="pcell-title">Educational Recom</div>
+        <div class="pcell-desc">Rekomendasi kursus, buku, dan tools terpilih untuk tingkatkan skill digitalmu secara terstruktur.</div>
+        <a href="#" class="btn btn-purple btn-sm">Lihat Topik</a>
+      </div>
+      <div class="pcell pcell-k fu fd2">
+        <div class="pcell-num">06</div>
+        <div class="pcell-icon pci-pink">🌐</div>
+        <div class="pcell-title">Culture Spotlight</div>
+        <div class="pcell-desc">Sorotan budaya digital, fenomena internet, dan tren yang membentuk identitas generasi kita.</div>
+        <a href="#" class="btn btn-sm" style="background:rgba(255,63,132,.15);color:var(--pink);border:1px solid rgba(255,63,132,.3);">Lihat Topik</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ SKILL UP CTA (Need food now? style) ══════════════ -->
+<section class="skillup" id="skillup">
+  <div class="skillup-bg-blob"></div>
+  <div class="skillup-bg-blob-2"></div>
+  <div class="container">
+    <div class="skillup-card fu">
+      <div>
+        <div class="sc-eye">Skill Up Program</div>
+        <h2 class="sc-title">Mau Upgrade<br><span>Skill Digitalmu?</span></h2>
+        <p class="sc-desc">Ikuti session, workshop, dan program belajar terstruktur bersama praktisi industri. Semua dalam Bahasa Indonesia, semua gratis.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="#" class="btn btn-lime">Lihat Program</a>
+          <a href="#" class="btn btn-outline">Jadwal Session</a>
+        </div>
+      </div>
+      <div class="sc-right">
+        <div class="sc-stat">
+          <div class="sc-stat-n" style="color:var(--lime);">12+</div>
+          <div class="sc-stat-l">Session Aktif</div>
+        </div>
+        <div class="sc-stat">
+          <div class="sc-stat-n" style="color:var(--pink);">Free</div>
+          <div class="sc-stat-l">Gratis Semua</div>
+        </div>
+        <div class="sc-stat">
+          <div class="sc-stat-n" style="color:#fff;font-size:28px;">Live</div>
+          <div class="sc-stat-l">Setiap Minggu</div>
+        </div>
+        <div class="sc-stat">
+          <div class="sc-stat-n" style="color:var(--lime);">ID</div>
+          <div class="sc-stat-l">Bahasa Indonesia</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ LATEST ARTICLES mixed grid ══════════════ -->
+<section class="latest" id="terbaru">
+  <div class="container">
+    <div class="sh fu">
+      <div class="sh-eye">✦ Terbaru</div>
+      <h2 class="sh-title">Artikel<br>Terkini</h2>
+    </div>
+    <div class="latest-grid fu fd1">
+      <!-- Main large article -->
+      <div class="art-main">
+        <div class="art-main-thumb">
+          <div class="art-main-pat"></div>
+          <div class="art-main-blob"></div>
+          <div style="position:absolute;bottom:20px;left:24px;font-family:'Inter',sans-serif;font-weight:900;font-size:72px;color:rgba(255,255,255,.07);line-height:1;">01</div>
+        </div>
+        <div class="art-main-body">
+          <span class="tag tag-p">Mindfulness</span>
+          <div class="art-title">Detox Digital: Panduan 7 Hari untuk Reset Total Kebiasaan Online-mu</div>
+          <div class="art-exc">Langkah praktis untuk mengurangi ketergantungan pada gadget tanpa harus meninggalkan pekerjaan dan koneksi sosialmu.</div>
+          <div class="art-meta">
+            <span class="art-date">4 Jun 2026 · 7 min</span>
+            <span class="art-rd">Baca →</span>
+          </div>
+        </div>
+      </div>
+      <!-- Side small articles -->
+      <div class="art-side">
+        <div class="art-small">
+          <span class="tag tag-k">Design Skill</span>
+          <div class="art-title">Mulai dari Mana Kalau Kamu Pemula di Dunia Desain?</div>
+          <div class="art-exc">Roadmap yang sudah terbukti berhasil bagi ratusan desainer muda Indonesia.</div>
+          <div class="art-meta">
+            <span class="art-date">2 Jun 2026</span>
+            <span class="art-rd">Baca →</span>
+          </div>
+        </div>
+        <div class="art-small">
+          <span class="tag tag-l">News &amp; Update</span>
+          <div class="art-title">Pekerjaan Masa Depan 2025–2030: Mana yang Naik, Mana yang Hilang?</div>
+          <div class="art-exc">Laporan WEF terbaru tentang profesi yang terdampak AI dalam 5 tahun ke depan.</div>
+          <div class="art-meta">
+            <span class="art-date">1 Jun 2026</span>
+            <span class="art-rd">Baca →</span>
+          </div>
+        </div>
+        <div class="art-small">
+          <span class="tag tag-l">Industry Insight</span>
+          <div class="art-title">AI di Dunia Kerja: Ancaman atau Peluang untuk Fresh Graduate?</div>
+          <div class="art-exc">Perspektif realistis tentang dampak AI di pasar kerja Indonesia dari para praktisi.</div>
+          <div class="art-meta">
+            <span class="art-date">29 Mei 2026</span>
+            <span class="art-rd">Baca →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;" class="fu">
+      <a href="#" class="btn btn-outline">Lihat Semua Artikel</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TANYA DICATALYST ══════════════ -->
+<section class="tanya" id="tanya">
+  <div class="container">
+    <div class="tanya-inner">
+      <div class="tanya-left fu">
+        <div class="sh">
+          <div class="sh-eye" style="color:var(--pink);">✦ Problem Solver</div>
+          <h2 class="sh-title" style="text-align:left;">Tanya<br><span style="color:var(--pink);">Dicatalyst</span></h2>
+          <p class="sh-sub" style="text-align:left;margin-left:0;">Punya pertanyaan seputar dunia digital? Bingung mau mulai dari mana? Kami sediakan jawaban dan panduan yang kamu butuhkan.</p>
+        </div>
+        <div class="ttags">
+          <span class="ttag on">Design</span>
+          <span class="ttag">Karir Digital</span>
+          <span class="ttag">AI &amp; Tools</span>
+          <span class="ttag">Marketing</span>
+          <span class="ttag">Freelance</span>
+          <span class="ttag">Coding</span>
+        </div>
+        <a href="#" class="btn btn-purple">Kirim Pertanyaan →</a>
+      </div>
+      <div class="tanya-right fu fd2">
+        <div class="tstat">
+          <div class="tstat-n" style="color:var(--lime);">50+</div>
+          <div class="tstat-l">Panduan Praktis</div>
+        </div>
+        <div class="tstat">
+          <div class="tstat-n" style="color:var(--pink);">6</div>
+          <div class="tstat-l">Topik Utama</div>
+        </div>
+        <div class="tstat">
+          <div class="tstat-n" style="color:#fff;font-size:30px;">100%</div>
+          <div class="tstat-l">Bahasa Indonesia</div>
+        </div>
+        <div class="tstat">
+          <div class="tstat-n" style="color:var(--lime);">Free</div>
+          <div class="tstat-l">Gratis Selamanya</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ NEWSLETTER (floating card style) ══════════════ -->
+<section class="newsletter" id="newsletter">
+  <div class="nl-bg1"></div>
+  <div class="nl-bg2"></div>
+  <div class="container">
+    <div class="nl-card fu">
+      <div class="nl-icon">✉️</div>
+      <div class="nl-text">
+        <h3>Stay up to date</h3>
+        <p>Daftar sekarang dan dapatkan konten digital terbaik setiap minggu.</p>
+      </div>
+      <form class="nl-form" onsubmit="doNL(event)">
+        <input type="email" class="nl-input" placeholder="Email kamu..." required>
+        <button type="submit" class="nl-btn" id="nlbtn">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer" id="tentang">
+  <div class="container">
+    <!-- Footer top: brand + 2 CTA cards -->
+    <div class="footer-top">
+      <div class="footer-top-inner">
+        <div>
+          <div class="fb-logo">
+            <div class="logomark">D</div>
+            DICA<span style="color:var(--lime);">TALYST</span>
+          </div>
+          <p class="fb-desc">Platform media dan edukasi literasi digital untuk anak muda Indonesia. Unlocking the power of digital society.</p>
+          <div class="socials" style="margin-top:20px;">
+            <a href="#" class="sbtn">IG</a>
+            <a href="#" class="sbtn">TT</a>
+            <a href="#" class="sbtn">YT</a>
+          </div>
+        </div>
+        <div class="footer-cta-card">
+          <div class="fcc-label">Mau belajar?</div>
+          <div class="fcc-title">Jelajahi Artikel</div>
+          <div class="fcc-desc">Ratusan artikel seputar digital literacy, gratis dan selalu update.</div>
+          <a href="#artikel" class="btn btn-lime btn-sm">Baca Artikel →</a>
+        </div>
+        <div class="footer-cta-card">
+          <div class="fcc-label">Ada Pertanyaan?</div>
+          <div class="fcc-title">Tanya Dicatalyst</div>
+          <div class="fcc-desc">Tim kami siap bantu jawab pertanyaan seputar dunia digital.</div>
+          <a href="#tanya" class="btn btn-purple btn-sm">Tanya Sekarang →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer main: 4-column links -->
+    <div class="footer-main">
+      <div class="footer-grid">
+        <div>
+          <div class="fcol-title">Topik</div>
+          <ul class="flinks">
+            <li><a href="#">Mindfulness &amp; Case Study</a></li>
+            <li><a href="#">Design Skill</a></li>
+            <li><a href="#">News &amp; Update</a></li>
+            <li><a href="#">Industry Insight</a></li>
+            <li><a href="#">Educational Recom</a></li>
+            <li><a href="#">Culture Spotlight</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="fcol-title">Platform</div>
+          <ul class="flinks">
+            <li><a href="#">Semua Artikel</a></li>
+            <li><a href="#">Skill Up</a></li>
+            <li><a href="#">Tanya Dicatalyst</a></li>
+            <li><a href="#">Newsletter</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="fcol-title">Info</div>
+          <ul class="flinks">
+            <li><a href="#">Tentang Kami</a></li>
+            <li><a href="#">Tim Editorial</a></li>
+            <li><a href="#">Advertise</a></li>
+            <li><a href="#">Kontak</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="fcol-title">Ikuti Kami</div>
+          <ul class="flinks">
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">TikTok</a></li>
+            <li><a href="#">YouTube</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bot">
+      <div class="fcopy">© 2026 <b>DICATALYST</b>. All rights reserved. Made with ♥ for Indonesian youth.</div>
+      <div class="fbot-r">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll
+  const nb = document.getElementById('nb');
+  window.addEventListener('scroll', () => nb.classList.toggle('navbar-bg', true));
+
+  // Hamburger
+  const hbg = document.getElementById('hbg'), mob = document.getElementById('mob');
+  let open = false;
+  hbg.addEventListener('click', () => {
+    open = !open;
+    mob.classList.toggle('open', open);
+    const [a, b, c] = hbg.querySelectorAll('span');
+    if (open) { a.style.transform='rotate(45deg) translate(5px,5px)'; b.style.opacity='0'; c.style.transform='rotate(-45deg) translate(5px,-5px)'; }
+    else { [a,b,c].forEach(s => s.style.cssText = ''); }
+  });
+  mob.querySelectorAll('a').forEach(l => l.addEventListener('click', () => { open=false; mob.classList.remove('open'); hbg.querySelectorAll('span').forEach(s => s.style.cssText=''); }));
+
+  // Fade-up observer
+  const obs = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('vis')), { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fu').forEach(el => obs.observe(el));
+
+  // Article scroll nav
+  const scroll = document.getElementById('fscroll');
+  document.getElementById('prev').addEventListener('click', () => scroll.scrollBy({ left: -360, behavior: 'smooth' }));
+  document.getElementById('next').addEventListener('click', () => scroll.scrollBy({ left: 360, behavior: 'smooth' }));
+
+  // Tanya tags
+  document.querySelectorAll('.ttag').forEach(t => t.addEventListener('click', () => { document.querySelectorAll('.ttag').forEach(x => x.classList.remove('on')); t.classList.add('on'); }));
+
+  // Newsletter
+  function doNL(e) {
+    e.preventDefault();
+    const btn = document.getElementById('nlbtn'), inp = e.target.querySelector('input');
+    btn.textContent = 'Berhasil! ✓'; btn.style.background = '#a0d840';
+    inp.value = '';
+    setTimeout(() => { btn.textContent = 'Subscribe'; btn.style.background = ''; }, 3000);
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    const t = document.querySelector(href);
+    if (t) t.scrollIntoView({ behavior: 'smooth' });
+  }));
+</script>
+</body>
+</html>
