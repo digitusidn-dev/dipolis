@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topik | dipolis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #4E0087;
+      --purple-light: #6b00b8;
+      --lime: #DAFF72;
+      --pink: #FF3F84;
+      --black: #000000;
+      --white: #FFFFFF;
+      --surface: #f4f4f8;
+      --surface-2: #eaeaef;
+      --border: #dddde8;
+      --text-muted: rgba(6,6,8,.55);
+      --text-dim: rgba(6,6,8,.38);
+      --radius: 16px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; color: #111; font-family: 'Outfit', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+
+    /* -- NAVBAR -- */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: #4E0087; border-bottom: 1px solid rgba(255,255,255,.08); transition: all .3s; }
+    .navbar.scrolled { background: #4E0087; box-shadow: 0 4px 24px rgba(78,0,135,.4); }
+    .nav-inner { display: flex; align-items: center; height: 68px; gap: 24px; }
+    .nav-logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
+    .nav-logo-svg { width: 34px; height: 34px; flex-shrink: 0; }
+    .nav-logo-text { font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: .01em; color: #fff; }
+    .nav-links { display: flex; list-style: none; gap: 2px; margin-left: auto; }
+    .nav-links a { display: block; padding: 7px 14px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.9); border-radius: 8px; transition: all .18s; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(255,255,255,.12); }
+    .nav-search { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.15); border-radius: 100px; padding: 7px 14px; transition: all .2s; }
+    .nav-search:focus-within { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.3); }
+    .nav-search svg { width: 15px; height: 15px; stroke: rgba(255,255,255,.7); flex-shrink: 0; }
+    .nav-search input { background: none; border: none; outline: none; font-family: 'Outfit', sans-serif; font-size: 13px; color: #fff; width: 140px; }
+    .nav-search input::placeholder { color: rgba(255,255,255,.45); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; margin-left: 8px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: #fff; transition: all .3s; border-radius: 2px; }
+
+    /* -- PAGE HERO -- */
+    .page-hero { padding: 120px 0 64px; background: var(--purple); position: relative; overflow: hidden; }
+    .page-hero-glow1 { position: absolute; top: -120px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(218,255,114,.15) 0%, transparent 65%); border-radius: 50%; filter: blur(60px); }
+    .page-hero-glow2 { position: absolute; bottom: -80px; left: -60px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(255,63,132,.12) 0%, transparent 65%); border-radius: 50%; filter: blur(50px); }
+    .page-hero-inner { position: relative; z-index: 1; }
+    .page-breadcrumb { font-size: 13px; color: rgba(255,255,255,.45); margin-bottom: 24px; }
+    .page-breadcrumb a { color: rgba(255,255,255,.6); transition: color .18s; }
+    .page-breadcrumb a:hover { color: #fff; }
+    .page-breadcrumb span { margin: 0 8px; }
+    .page-hero h1 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(32px, 5vw, 56px); letter-spacing: -.03em; line-height: 1.05; color: #fff; margin-bottom: 16px; }
+    .page-hero h1 em { font-style: italic; color: var(--lime); }
+    .page-hero-sub { font-size: 16px; color: rgba(255,255,255,.6); line-height: 1.7; max-width: 560px; }
+    .page-hero-stats { display: flex; gap: 32px; margin-top: 28px; }
+    .ph-stat { text-align: left; }
+    .ph-stat-n { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 28px; color: var(--lime); line-height: 1; }
+    .ph-stat-l { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 4px; }
+
+    /* -- TOPIC FILTER -- */
+    .topic-filter { padding: 32px 0; border-bottom: 1px solid var(--border); margin-bottom: 48px; position: sticky; top: 68px; background: #fff; z-index: 50; }
+    .tf-inner { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+    .tf-inner::-webkit-scrollbar { display: none; }
+    .tf-btn { padding: 9px 20px; border-radius: 100px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: #fff; color: var(--text-muted); cursor: pointer; transition: all .2s; white-space: nowrap; flex-shrink: 0; }
+    .tf-btn:hover { border-color: rgba(78,0,135,.3); color: var(--purple); }
+    .tf-btn.active { background: var(--purple); border-color: var(--purple); color: #fff; }
+
+    /* -- TOPIC SECTIONS -- */
+    .topic-sec { padding: 48px 0 64px; border-bottom: 1px solid var(--border); }
+    .topic-sec:last-child { border-bottom: none; }
+    .ts-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; gap: 24px; }
+    .ts-info { flex: 1; }
+    .ts-num { font-size: 11px; font-weight: 900; letter-spacing: .2em; color: var(--text-dim); margin-bottom: 8px; }
+    .ts-title { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 28px; letter-spacing: -.02em; line-height: 1.15; color: #111; }
+    .ts-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-top: 8px; max-width: 480px; }
+    .ts-count { font-size: 12px; font-weight: 600; color: var(--text-dim); white-space: nowrap; padding: 6px 14px; background: var(--surface); border-radius: 100px; }
+    .ts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+    /* -- ARTICLE CARD -- */
+    .acard { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all .25s; display: flex; flex-direction: column; }
+    .acard:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.07); border-color: rgba(78,0,135,.2); }
+    .acard-thumb { height: 180px; position: relative; overflow: hidden; }
+    .acard-thumb-pat { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px); background-size: 16px 16px; }
+    .acard-strip { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
+    .acard-strip-p { background: rgba(192,132,252,.75); }
+    .acard-strip-k { background: rgba(255,63,132,.75); }
+    .acard-strip-l { background: rgba(218,255,114,.75); }
+    .acard-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+    .acard-tag { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 8px; }
+    .acard-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; line-height: 1.3; letter-spacing: -.01em; margin-bottom: 8px; color: #111; }
+    .acard-exc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; flex: 1; }
+    .acard-meta { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border); }
+    .acard-date { font-size: 11px; color: var(--text-dim); }
+    .acard-read { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--purple); }
+    .acard:hover .acard-read { letter-spacing: .14em; }
+
+    /* -- CTA BOTTOM -- */
+    .topic-cta { padding: 80px 0; text-align: center; background: var(--surface); border-top: 1px solid var(--border); }
+    .topic-cta h2 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 32px; letter-spacing: -.02em; color: var(--purple); margin-bottom: 12px; }
+    .topic-cta p { font-size: 15px; color: var(--text-muted); max-width: 440px; margin: 0 auto 28px; line-height: 1.7; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: all .22s; border-radius: 100px; letter-spacing: .01em; }
+    .btn-purple { background: var(--purple); color: var(--white); }
+    .btn-purple:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(78,0,135,.4); }
+    .btn-outline-dark { background: transparent; color: #111; border: 1.5px solid var(--border); }
+    .btn-outline-dark:hover { border-color: var(--purple); color: var(--purple); transform: translateY(-2px); }
+
+    /* -- FOOTER -- */
+    .footer { background: var(--purple); border-top: 1px solid rgba(255,255,255,.1); }
+    .footer-inner { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 48px; padding: 64px 0 48px; }
+    .fb-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .fb-logo-text { font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: .01em; color: #fff; }
+    .fb-desc { font-size: 13px; color: rgba(255,255,255,.45); max-width: 260px; line-height: 1.7; margin-bottom: 24px; }
+    .socials { display: flex; gap: 8px; }
+    .sbtn { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .2s; color: rgba(255,255,255,.5); }
+    .sbtn:hover { background: rgba(255,255,255,.12); color: #fff; }
+    .fcol-title { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--lime); margin-bottom: 20px; }
+    .flinks { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .flinks a { font-size: 13px; color: rgba(255,255,255,.6); transition: color .18s; }
+    .flinks a:hover { color: #fff; }
+    .footer-bot { border-top: 1px solid rgba(255,255,255,.1); padding: 20px 0; display: flex; align-items: center; justify-content: space-between; }
+    .fcopy { font-size: 12px; color: rgba(255,255,255,.3); }
+    .fcopy b { color: var(--lime); }
+    .fbot-r { display: flex; gap: 24px; }
+    .fbot-r a { font-size: 11px; color: rgba(255,255,255,.35); letter-spacing: .08em; text-transform: uppercase; transition: color .18s; }
+    .fbot-r a:hover { color: rgba(255,255,255,.7); }
+
+    /* -- RESPONSIVE -- */
+    @media (max-width: 1024px) {
+      .ts-grid { grid-template-columns: 1fr 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .page-hero-stats { gap: 24px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-search { display: none; }
+      .hamburger { display: flex; }
+      .ts-grid { grid-template-columns: 1fr; }
+      .ts-header { flex-direction: column; align-items: flex-start; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .footer-bot { flex-direction: column; gap: 12px; text-align: center; }
+      .page-hero-stats { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="nb">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo-white.png" class="nav-logo-svg" alt="dipolis logo">
+        <span class="nav-logo-text">dipolis</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#artikel">Artikel</a></li>
+        <li><a href="topik.html" class="active">Topik</a></li>
+        <li><a href="index.html#skillup">Skill Up</a></li>
+        <li><a href="index.html#layanan">Layanan</a></li>
+        <li><a href="index.html#tanya">Tanya dipolis</a></li>
+        <li><a href="index.html#tentang">Tentang</a></li>
+      </ul>
+      <div class="nav-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Cari artikel...">
+      </div>
+      <button class="hamburger" id="hbg"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-glow1"></div>
+  <div class="page-hero-glow2"></div>
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="page-breadcrumb">
+        <a href="index.html">Home</a><span>/</span>Topik
+      </div>
+      <h1>The Map of Your<br><em>Digital Life</em></h1>
+      <p class="page-hero-sub">Jelajahi 6 pilar konten dipolis. Setiap topik dirancang untuk membantumu memahami, beradaptasi, dan berkembang di era digital.</p>
+      <div class="page-hero-stats">
+        <div class="ph-stat"><div class="ph-stat-n">6</div><div class="ph-stat-l">Topik Utama</div></div>
+        <div class="ph-stat"><div class="ph-stat-n">50+</div><div class="ph-stat-l">Artikel</div></div>
+        <div class="ph-stat"><div class="ph-stat-n">Free</div><div class="ph-stat-l">Gratis Selamanya</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOPIC FILTER -->
+<div class="topic-filter">
+  <div class="container">
+    <div class="tf-inner">
+      <button class="tf-btn active" data-target="all">Semua Topik</button>
+      <button class="tf-btn" data-target="mindfulness">Mindfulness &amp; Case Study</button>
+      <button class="tf-btn" data-target="design">Design Skill</button>
+      <button class="tf-btn" data-target="news">News &amp; Update</button>
+      <button class="tf-btn" data-target="industry">Industry Insight</button>
+      <button class="tf-btn" data-target="edu">Edu Picks</button>
+      <button class="tf-btn" data-target="culture">Culture Spotlight</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOPIC SECTIONS -->
+<main>
+  <div class="container">
+
+    <!-- 01 Mindfulness -->
+    <section class="topic-sec" id="mindfulness">
+      <div class="ts-header">
+        <div class="ts-info">
+          <div class="ts-num">01</div>
+          <h2 class="ts-title">Mindfulness &amp; Case Study</h2>
+          <p class="ts-desc">Kesehatan digital, keseimbangan hidup di era teknologi, dan studi kasus nyata dari industri global.</p>
+        </div>
+        <span class="ts-count">8 Artikel</span>
+      </div>
+      <div class="ts-grid">
+        <a href="dipolis-artikel.html" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#4E0087,#1a0035);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-p"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#c084fc;">Mindfulness</div>
+            <div class="acard-title">Scrolling Tanpa Henti: Bagaimana Media Sosial Merusak Pola Tidurmu</div>
+            <div class="acard-exc">Studi terbaru ungkap korelasi kuat antara penggunaan medsos malam hari dan kualitas tidur Gen Z.</div>
+            <div class="acard-meta"><span class="acard-date">5 Jun 2026</span><span class="acard-read">8 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#3a0066,#1a0035);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-p"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#c084fc;">Case Study</div>
+            <div class="acard-title">Studi Kasus: Bagaimana Gojek Membangun Budaya Data-Driven</div>
+            <div class="acard-exc">Pelajaran dari perjalanan salah satu startup terbesar Asia Tenggara dalam membangun kultur berbasis data.</div>
+            <div class="acard-meta"><span class="acard-date">30 Mei 2026</span><span class="acard-read">12 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#4E0087,#220044);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-p"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#c084fc;">Mindfulness</div>
+            <div class="acard-title">Digital Detox: Mitos atau Kebutuhan Nyata Gen Z?</div>
+            <div class="acard-exc">Memahami kapan harus disconnect dan bagaimana melakukannya tanpa kehilangan koneksi sosial.</div>
+            <div class="acard-meta"><span class="acard-date">22 Mei 2026</span><span class="acard-read">6 min baca</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 02 Design Skill -->
+    <section class="topic-sec" id="design">
+      <div class="ts-header">
+        <div class="ts-info">
+          <div class="ts-num">02</div>
+          <h2 class="ts-title">Design Skill</h2>
+          <p class="ts-desc">Tutorial desain, tips tools kreatif, dan panduan upgrade skill dari pemula hingga profesional.</p>
+        </div>
+        <span class="ts-count">10 Artikel</span>
+      </div>
+      <div class="ts-grid">
+        <a href="dipolis-artikel.html" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#2a001a,#6b0033);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-k"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:var(--pink);">Design Skill</div>
+            <div class="acard-title">10 Tools Figma yang Wajib Kamu Tahu di 2026</div>
+            <div class="acard-exc">Dari auto-layout sampai variables, tools ini akan mengubah cara kamu desain selamanya.</div>
+            <div class="acard-meta"><span class="acard-date">3 Jun 2026</span><span class="acard-read">6 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#3d0020,#5a002a);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-k"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:var(--pink);">Design Skill</div>
+            <div class="acard-title">Panduan Lengkap: Dari Canva ke Figma Tanpa Drama</div>
+            <div class="acard-exc">Transisi dari tools desain sederhana ke profesional, step-by-step untuk pemula.</div>
+            <div class="acard-meta"><span class="acard-date">27 Mei 2026</span><span class="acard-read">9 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#2a001a,#4d0028);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-k"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:var(--pink);">Design Skill</div>
+            <div class="acard-title">Color Theory untuk Non-Designer: Panduan Warna yang Masuk Akal</div>
+            <div class="acard-exc">Cara memilih palet warna yang profesional tanpa harus belajar teori seni 4 tahun.</div>
+            <div class="acard-meta"><span class="acard-date">19 Mei 2026</span><span class="acard-read">7 min baca</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 03 News & Update -->
+    <section class="topic-sec" id="news">
+      <div class="ts-header">
+        <div class="ts-info">
+          <div class="ts-num">03</div>
+          <h2 class="ts-title">News &amp; Update</h2>
+          <p class="ts-desc">Berita terkini dari dunia digital, teknologi, dan industri kreatif yang selalu relevan buat kamu.</p>
+        </div>
+        <span class="ts-count">12 Artikel</span>
+      </div>
+      <div class="ts-grid">
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#0f1f00,#1a3300);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-l"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#8fc21a;">News</div>
+            <div class="acard-title">Indonesia Masuk 10 Besar Negara dengan Pertumbuhan AI Tercepat</div>
+            <div class="acard-exc">Laporan terbaru menunjukkan adopsi AI di Indonesia melonjak 3x lipat dalam 2 tahun terakhir.</div>
+            <div class="acard-meta"><span class="acard-date">4 Jun 2026</span><span class="acard-read">5 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#142200,#1f3800);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-l"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#8fc21a;">Update</div>
+            <div class="acard-title">TikTok Shop Resmi Kembali: Apa yang Berubah untuk Creator Indonesia?</div>
+            <div class="acard-exc">Regulasi baru, fitur baru, dan peluang baru untuk content creator lokal.</div>
+            <div class="acard-meta"><span class="acard-date">29 Mei 2026</span><span class="acard-read">6 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#0f1f00,#253d00);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-l"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#8fc21a;">News</div>
+            <div class="acard-title">Google Rilis Gemini 3.0: Apa Artinya untuk Developer Indonesia?</div>
+            <div class="acard-exc">Update terbesar Google AI dan dampaknya terhadap ekosistem developer lokal.</div>
+            <div class="acard-meta"><span class="acard-date">20 Mei 2026</span><span class="acard-read">8 min baca</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 04 Industry Insight -->
+    <section class="topic-sec" id="industry">
+      <div class="ts-header">
+        <div class="ts-info">
+          <div class="ts-num">04</div>
+          <h2 class="ts-title">Industry Insight</h2>
+          <p class="ts-desc">Data, tren, dan insight mendalam tentang lanskap industri digital di Indonesia dan global.</p>
+        </div>
+        <span class="ts-count">7 Artikel</span>
+      </div>
+      <div class="ts-grid">
+        <a href="dipolis-artikel.html" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#0f1f00,#1a3300);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-l"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#8fc21a;">Industry Insight</div>
+            <div class="acard-title">Keuangan Makin Cepat dengan AI: Dampak Nyata di Fintech Indonesia</div>
+            <div class="acard-exc">Bagaimana AI mengubah cara jutaan orang Indonesia mengelola keuangan mereka.</div>
+            <div class="acard-meta"><span class="acard-date">1 Jun 2026</span><span class="acard-read">10 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#142200,#0f1a00);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-l"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#8fc21a;">Industry Insight</div>
+            <div class="acard-title">Kenapa Startup Indonesia Mulai Beralih ke AI-First Strategy?</div>
+            <div class="acard-exc">Tren baru di ekosistem startup lokal yang mengutamakan artificial intelligence sejak hari pertama.</div>
+            <div class="acard-meta"><span class="acard-date">23 Mei 2026</span><span class="acard-read">9 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#0a1500,#1a3300);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-l"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#8fc21a;">Industry Insight</div>
+            <div class="acard-title">Remote Work di 2026: Data Terbaru dari 500 Perusahaan Indonesia</div>
+            <div class="acard-exc">Survei terbesar tentang kebijakan kerja jarak jauh pasca-pandemi di perusahaan lokal.</div>
+            <div class="acard-meta"><span class="acard-date">15 Mei 2026</span><span class="acard-read">11 min baca</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 05 Edu Picks -->
+    <section class="topic-sec" id="edu">
+      <div class="ts-header">
+        <div class="ts-info">
+          <div class="ts-num">05</div>
+          <h2 class="ts-title">Edu Picks</h2>
+          <p class="ts-desc">Rekomendasi kursus, buku, dan tools terpilih untuk tingkatkan skill digitalmu secara terstruktur.</p>
+        </div>
+        <span class="ts-count">6 Artikel</span>
+      </div>
+      <div class="ts-grid">
+        <a href="dipolis-artikel.html" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#4E0087,#1a0035);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-p"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#c084fc;">Edu Picks</div>
+            <div class="acard-title">Top 10 App untuk Bantu Kamu Dapat Kerja Lebih Cepat</div>
+            <div class="acard-exc">Dari LinkedIn optimizer sampai portfolio builder, tools yang dipakai para job seeker sukses.</div>
+            <div class="acard-meta"><span class="acard-date">28 Mei 2026</span><span class="acard-read">5 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#3a0066,#260044);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-p"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#c084fc;">Edu Picks</div>
+            <div class="acard-title">5 Kursus Online Gratis Terbaik untuk Belajar Data Analytics</div>
+            <div class="acard-exc">Kurikulum yang sudah divalidasi industri, semuanya bisa diakses tanpa biaya.</div>
+            <div class="acard-meta"><span class="acard-date">18 Mei 2026</span><span class="acard-read">7 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#4E0087,#2d004f);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-p"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:#c084fc;">Edu Picks</div>
+            <div class="acard-title">Buku Wajib 2026: 7 Bacaan Digital yang Mengubah Cara Pikirmu</div>
+            <div class="acard-exc">Rekomendasi bacaan pilihan dari tim editorial dipolis untuk upgrading mindset digital.</div>
+            <div class="acard-meta"><span class="acard-date">10 Mei 2026</span><span class="acard-read">6 min baca</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- 06 Culture Spotlight -->
+    <section class="topic-sec" id="culture">
+      <div class="ts-header">
+        <div class="ts-info">
+          <div class="ts-num">06</div>
+          <h2 class="ts-title">Culture Spotlight</h2>
+          <p class="ts-desc">Sorotan budaya digital, fenomena internet, dan tren yang membentuk identitas generasi kita.</p>
+        </div>
+        <span class="ts-count">9 Artikel</span>
+      </div>
+      <div class="ts-grid">
+        <a href="dipolis-artikel.html" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#2a001a,#6b0033);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-k"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:var(--pink);">Culture Spotlight</div>
+            <div class="acard-title">Pekerjaan Masa Depan 2025 hingga 2030: Mana Naik, Mana Mulai Hilang?</div>
+            <div class="acard-exc">Laporan WEF terbaru tentang profesi yang terdampak otomasi AI dalam 5 tahun ke depan.</div>
+            <div class="acard-meta"><span class="acard-date">25 Mei 2026</span><span class="acard-read">7 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#3d0020,#5a002a);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-k"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:var(--pink);">Culture Spotlight</div>
+            <div class="acard-title">Fenomena "Quiet Quitting" di Kalangan Pekerja Muda Indonesia</div>
+            <div class="acard-exc">Antara self-care dan produktivitas, di mana Gen Z menarik garis batasnya?</div>
+            <div class="acard-meta"><span class="acard-date">16 Mei 2026</span><span class="acard-read">8 min baca</span></div>
+          </div>
+        </a>
+        <a href="#" class="acard">
+          <div class="acard-thumb" style="background:linear-gradient(135deg,#2a001a,#4d0028);"><div class="acard-thumb-pat"></div><div class="acard-strip acard-strip-k"></div></div>
+          <div class="acard-body">
+            <div class="acard-tag" style="color:var(--pink);">Culture Spotlight</div>
+            <div class="acard-title">Meme Culture: Dari Hiburan Jadi Alat Komunikasi Brand</div>
+            <div class="acard-exc">Bagaimana brand-brand besar Indonesia memanfaatkan meme untuk engage dengan Gen Z.</div>
+            <div class="acard-meta"><span class="acard-date">8 Mei 2026</span><span class="acard-read">5 min baca</span></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- CTA BOTTOM -->
+<section class="topic-cta">
+  <div class="container">
+    <h2>Tidak Menemukan yang Kamu Cari?</h2>
+    <p>Ajukan pertanyaanmu langsung dan tim editorial kami akan membantu menemukan jawabannya.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="index.html#tanya" class="btn btn-purple">Tanya dipolis &#8594;</a>
+      <a href="index.html#artikel" class="btn btn-outline-dark">Lihat Semua Artikel</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="fb-logo">
+          <img src="logo-white.png" alt="dipolis logo" style="width:32px;height:32px;">
+          <span class="fb-logo-text">dipolis</span>
+        </div>
+        <p class="fb-desc">Platform media dan edukasi literasi digital untuk anak muda Indonesia. Konten berkualitas, gratis, selalu relevan. Berdiri sejak 2023.</p>
+        <div class="socials">
+          <a href="#" class="sbtn">IG</a>
+          <a href="#" class="sbtn">TT</a>
+          <a href="#" class="sbtn">YT</a>
+        </div>
+      </div>
+      <div>
+        <div class="fcol-title">Topik</div>
+        <ul class="flinks">
+          <li><a href="#mindfulness">Mindfulness &amp; Case Study</a></li>
+          <li><a href="#design">Design Skill</a></li>
+          <li><a href="#news">News &amp; Update</a></li>
+          <li><a href="#industry">Industry Insight</a></li>
+          <li><a href="#edu">Edu Picks</a></li>
+          <li><a href="#culture">Culture Spotlight</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="fcol-title">Platform</div>
+        <ul class="flinks">
+          <li><a href="index.html#artikel">Semua Artikel</a></li>
+          <li><a href="index.html#skillup">Skill Up</a></li>
+          <li><a href="index.html#layanan">Layanan</a></li>
+          <li><a href="index.html#tanya">Tanya dipolis</a></li>
+          <li><a href="index.html#newsletter">Newsletter</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="fcol-title">Info</div>
+        <ul class="flinks">
+          <li><a href="#">Tentang Kami</a></li>
+          <li><a href="#">Tim Editorial</a></li>
+          <li><a href="#">Advertise</a></li>
+          <li><a href="#">Kontak</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <div class="fcopy">&copy; 2023 <b>dipolis.id</b>. All rights reserved. Made with &#9829; for Indonesian youth.</div>
+      <div class="fbot-r"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nb = document.getElementById('nb');
+  window.addEventListener('scroll', () => nb.classList.toggle('scrolled', scrollY > 20));
+
+  // Topic filter
+  document.querySelectorAll('.tf-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.target;
+      document.querySelectorAll('.topic-sec').forEach(sec => {
+        if (target === 'all') { sec.style.display = ''; }
+        else { sec.style.display = sec.id === target ? '' : 'none'; }
+      });
+    });
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    const t = document.querySelector(href);
+    if (t) t.scrollIntoView({ behavior: 'smooth' });
+  }));
+</script>
+</body>
+</html>
