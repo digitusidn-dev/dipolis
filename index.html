@@ -279,23 +279,23 @@
     .ltrust-d-k { background: var(--pink); }
     .ltrust-d-l { background: #8aaa00; }
 
-        .newsletter { padding: 64px 0; background: var(--purple); position: relative; overflow: hidden; }
-    .nl-bg1 { position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(218,255,114,.18) 0%, transparent 65%); border-radius: 50%; filter: blur(60px); }
-    .nl-bg2 { position: absolute; bottom: -60px; left: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,63,132,.2) 0%, transparent 65%); border-radius: 50%; filter: blur(50px); }
-    .nl-card { position: relative; z-index: 1; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 44px 48px; display: flex; align-items: center; gap: 48px; backdrop-filter: blur(10px); }
-    .nl-icon { width: 56px; height: 56px; background: var(--lime); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+        .newsletter { padding: 64px 0; background: linear-gradient(135deg, #c8f050, #DAFF72, #b8e040); position: relative; overflow: hidden; }
+    .nl-bg1 { position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(78,0,135,.12) 0%, transparent 65%); border-radius: 50%; filter: blur(60px); }
+    .nl-bg2 { position: absolute; bottom: -60px; left: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(78,0,135,.08) 0%, transparent 65%); border-radius: 50%; filter: blur(50px); }
+    .nl-card { position: relative; z-index: 1; background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.08); border-radius: 24px; padding: 44px 48px; display: flex; align-items: center; gap: 48px; backdrop-filter: blur(10px); }
+    .nl-icon { width: 56px; height: 56px; background: var(--purple); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; color: #fff; }
     .nl-text { flex: 1; }
     .nl-text h3 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(18px, 2vw, 26px); letter-spacing: -.02em; margin-bottom: 4px; }
-    .nl-text p { font-size: 14px; color: #fff; }
+    .nl-text p { font-size: 14px; color: rgba(0,0,0,.65); }
     .nl-form { display: flex; flex-shrink: 0; }
-    .nl-input { background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.2); border-right: none; padding: 14px 20px; font-size: 14px; color: var(--white); font-family: 'Outfit', sans-serif; border-radius: 100px 0 0 100px; outline: none; min-width: 240px; }
-    .nl-input::placeholder { color: rgba(255,255,255,.35); }
-    .nl-input:focus { border-color: var(--lime); }
-    .nl-btn { background: var(--lime); color: #000; border: none; padding: 14px 26px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; border-radius: 0 100px 100px 0; transition: background .2s; white-space: nowrap; }
-    .nl-btn:hover { background: #caef5a; }
+    .nl-input { background: rgba(255,255,255,.7); border: 1px solid rgba(0,0,0,.1); border-right: none; padding: 14px 20px; font-size: 14px; color: #111; font-family: 'Outfit', sans-serif; border-radius: 100px 0 0 100px; outline: none; min-width: 240px; }
+    .nl-input::placeholder { color: rgba(0,0,0,.35); }
+    .nl-input:focus { border-color: var(--purple); }
+    .nl-btn { background: var(--purple); color: #fff; border: none; padding: 14px 26px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; border-radius: 0 100px 100px 0; transition: background .2s; white-space: nowrap; }
+    .nl-btn:hover { background: var(--purple-light); }
 
     /* ── FOOTER ── */
-    .footer { background: #0d0d0d; border-top: 1px solid rgba(255,255,255,.06); }
+    .footer { background: var(--purple); border-top: 1px solid rgba(255,255,255,.1); }
     .footer-inner { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 48px; padding: 64px 0 48px; }
     .fb-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
     .fb-logo-text { font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: .01em; color: #fff; }
@@ -720,7 +720,7 @@
     <div class="nl-card fu">
       <div class="nl-icon">✉️</div>
       <div class="nl-text">
-        <h3 style="color:#fff;">Stay up to date</h3>
+        <h3 style="color:#111;">Stay up to date</h3>
         <p>Daftar sekarang dan dapatkan konten digital terbaik dari dipolis setiap minggu.</p>
       </div>
       <form class="nl-form" onsubmit="doNL(event)">
@@ -819,6 +819,7 @@
 </script>
 </body>
 </html>
+
 
 
 
