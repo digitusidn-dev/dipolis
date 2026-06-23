@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tentang Kami | dipolis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #4E0087;
+      --purple-light: #6b00b8;
+      --lime: #DAFF72;
+      --pink: #FF3F84;
+      --black: #000000;
+      --white: #FFFFFF;
+      --surface: #f4f4f8;
+      --surface-2: #eaeaef;
+      --border: #dddde8;
+      --text-muted: rgba(6,6,8,.55);
+      --text-dim: rgba(6,6,8,.38);
+      --radius: 16px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; color: #111; font-family: 'Outfit', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+
+    /* -- NAVBAR -- */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: #4E0087; border-bottom: 1px solid rgba(255,255,255,.08); transition: all .3s; }
+    .navbar.scrolled { background: #4E0087; box-shadow: 0 4px 24px rgba(78,0,135,.4); }
+    .nav-inner { display: flex; align-items: center; height: 68px; gap: 24px; }
+    .nav-logo { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
+    .nav-logo-svg { width: 34px; height: 34px; flex-shrink: 0; }
+    .nav-logo-text { font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: .01em; color: #fff; }
+    .nav-links { display: flex; list-style: none; gap: 2px; margin-left: auto; }
+    .nav-links a { display: block; padding: 7px 14px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.9); border-radius: 8px; transition: all .18s; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(255,255,255,.12); }
+    .nav-search { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.15); border-radius: 100px; padding: 7px 14px; }
+    .nav-search svg { width: 15px; height: 15px; stroke: rgba(255,255,255,.7); flex-shrink: 0; }
+    .nav-search input { background: none; border: none; outline: none; font-family: 'Outfit', sans-serif; font-size: 13px; color: #fff; width: 140px; }
+    .nav-search input::placeholder { color: rgba(255,255,255,.45); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 8px; margin-left: 8px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: #fff; transition: all .3s; border-radius: 2px; }
+
+    /* -- ABOUT HERO -- */
+    .about-hero { padding: 140px 0 80px; background: var(--purple); position: relative; overflow: hidden; }
+    .about-hero-glow1 { position: absolute; top: -100px; right: -80px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(218,255,114,.12) 0%, transparent 65%); border-radius: 50%; filter: blur(60px); }
+    .about-hero-glow2 { position: absolute; bottom: -60px; left: -40px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(255,63,132,.1) 0%, transparent 65%); border-radius: 50%; filter: blur(50px); }
+    .about-hero-inner { position: relative; z-index: 1; max-width: 680px; }
+    .about-hero-bread { font-size: 13px; color: rgba(255,255,255,.4); margin-bottom: 28px; }
+    .about-hero-bread a { color: rgba(255,255,255,.6); transition: color .18s; }
+    .about-hero-bread a:hover { color: #fff; }
+    .about-hero-bread span { margin: 0 8px; }
+    .about-hero h1 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(32px, 5vw, 52px); letter-spacing: -.03em; line-height: 1.1; color: #fff; margin-bottom: 20px; }
+    .about-hero h1 em { font-style: italic; color: var(--lime); }
+    .about-hero-lead { font-size: 18px; color: rgba(255,255,255,.65); line-height: 1.75; }
+
+    /* -- STORY SECTION -- */
+    .story { padding: 96px 0; }
+    .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .story-img { width: 100%; border-radius: 20px; aspect-ratio: 4/3; object-fit: cover; filter: grayscale(20%); }
+    .story-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--purple); margin-bottom: 16px; }
+    .story-h2 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 32px; letter-spacing: -.02em; line-height: 1.15; color: #111; margin-bottom: 20px; }
+    .story p { font-size: 16px; color: #444; line-height: 1.85; margin-bottom: 16px; }
+    .story-highlight { font-size: 20px; font-weight: 700; color: var(--purple); line-height: 1.6; border-left: 3px solid var(--purple); padding-left: 20px; margin: 28px 0; }
+
+    /* -- BELIEF SECTION -- */
+    .belief { padding: 96px 0; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .belief-header { text-align: center; max-width: 600px; margin: 0 auto 56px; }
+    .belief-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--purple); margin-bottom: 14px; }
+    .belief-h2 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 32px; letter-spacing: -.02em; line-height: 1.15; color: #111; margin-bottom: 14px; }
+    .belief-sub { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+    .belief-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .bcard { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; transition: all .25s; }
+    .bcard:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.06); border-color: rgba(78,0,135,.2); }
+    .bcard-num { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 36px; color: var(--lime); line-height: 1; margin-bottom: 16px; }
+    .bcard-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -.01em; margin-bottom: 10px; color: #111; }
+    .bcard-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+    /* -- TIMELINE -- */
+    .timeline { padding: 96px 0; }
+    .timeline-header { text-align: center; max-width: 560px; margin: 0 auto 56px; }
+    .timeline-h2 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 32px; letter-spacing: -.02em; line-height: 1.15; color: #111; margin-bottom: 14px; }
+    .timeline-sub { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+    .tl-track { position: relative; max-width: 640px; margin: 0 auto; padding-left: 40px; }
+    .tl-track::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+    .tl-item { position: relative; padding-bottom: 48px; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot { position: absolute; left: -40px; top: 4px; width: 12px; height: 12px; border-radius: 50%; border: 3px solid var(--purple); background: #fff; z-index: 1; }
+    .tl-item:first-child .tl-dot { background: var(--purple); }
+    .tl-year { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 14px; color: var(--purple); letter-spacing: .08em; margin-bottom: 6px; }
+    .tl-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 18px; color: #111; margin-bottom: 8px; }
+    .tl-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+    /* -- TEAM -- */
+    .team { padding: 96px 0; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .team-header { text-align: center; max-width: 560px; margin: 0 auto 48px; }
+    .team-h2 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 32px; letter-spacing: -.02em; line-height: 1.15; color: #111; margin-bottom: 14px; }
+    .team-sub { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+    .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .tcard { text-align: center; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 20px; transition: all .25s; }
+    .tcard:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.06); }
+    .tcard-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--purple); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 24px; color: #fff; margin: 0 auto 16px; }
+    .tcard-name { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; color: #111; margin-bottom: 4px; }
+    .tcard-role { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+    /* -- CLOSING CTA -- */
+    .closing { padding: 96px 0; background: var(--purple); position: relative; overflow: hidden; text-align: center; }
+    .closing-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(218,255,114,.1) 0%, transparent 65%); border-radius: 50%; filter: blur(80px); }
+    .closing-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+    .closing h2 { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(26px, 4vw, 40px); letter-spacing: -.02em; line-height: 1.15; color: #fff; margin-bottom: 16px; }
+    .closing p { font-size: 16px; color: rgba(255,255,255,.6); line-height: 1.75; margin-bottom: 32px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: all .22s; border-radius: 100px; letter-spacing: .01em; }
+    .btn-lime { background: var(--lime); color: #000; }
+    .btn-lime:hover { background: #caef5a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(218,255,114,.25); }
+    .btn-outline-w { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.25); }
+    .btn-outline-w:hover { border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.06); transform: translateY(-2px); }
+
+    /* -- FOOTER -- */
+    .footer { background: var(--purple); border-top: 1px solid rgba(255,255,255,.1); }
+    .footer-inner { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 48px; padding: 64px 0 48px; }
+    .fb-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .fb-logo-text { font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: .01em; color: #fff; }
+    .fb-desc { font-size: 13px; color: rgba(255,255,255,.45); max-width: 260px; line-height: 1.7; margin-bottom: 24px; }
+    .socials { display: flex; gap: 8px; }
+    .sbtn { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; transition: all .2s; color: rgba(255,255,255,.5); }
+    .sbtn:hover { background: rgba(255,255,255,.12); color: #fff; }
+    .fcol-title { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--lime); margin-bottom: 20px; }
+    .flinks { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .flinks a { font-size: 13px; color: rgba(255,255,255,.6); transition: color .18s; }
+    .flinks a:hover { color: #fff; }
+    .footer-bot { border-top: 1px solid rgba(255,255,255,.1); padding: 20px 0; display: flex; align-items: center; justify-content: space-between; }
+    .fcopy { font-size: 12px; color: rgba(255,255,255,.3); }
+    .fcopy b { color: var(--lime); }
+    .fbot-r { display: flex; gap: 24px; }
+    .fbot-r a { font-size: 11px; color: rgba(255,255,255,.35); letter-spacing: .08em; text-transform: uppercase; transition: color .18s; }
+    .fbot-r a:hover { color: rgba(255,255,255,.7); }
+
+    /* -- FADE UP -- */
+    .fu { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+    .fu.vis { opacity: 1; transform: translateY(0); }
+    .fd1 { transition-delay: .1s; } .fd2 { transition-delay: .2s; }
+
+    /* -- RESPONSIVE -- */
+    @media (max-width: 1024px) {
+      .story-grid { grid-template-columns: 1fr; gap: 48px; }
+      .belief-grid { grid-template-columns: 1fr 1fr; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-search { display: none; }
+      .hamburger { display: flex; }
+      .belief-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .footer-bot { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="nb">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo-white.png" class="nav-logo-svg" alt="dipolis logo">
+        <span class="nav-logo-text">dipolis</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#artikel">Artikel</a></li>
+        <li><a href="topik.html">Topik</a></li>
+        <li><a href="index.html#skillup">Skill Up</a></li>
+        <li><a href="index.html#layanan">Layanan</a></li>
+        <li><a href="index.html#tanya">Tanya dipolis</a></li>
+        <li><a href="tentang.html" class="active">Tentang</a></li>
+      </ul>
+      <div class="nav-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Cari artikel...">
+      </div>
+      <button class="hamburger" id="hbg"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="about-hero">
+  <div class="about-hero-glow1"></div>
+  <div class="about-hero-glow2"></div>
+  <div class="container">
+    <div class="about-hero-inner fu">
+      <div class="about-hero-bread">
+        <a href="index.html">Home</a><span>/</span>Tentang
+      </div>
+      <h1>Kami percaya setiap anak muda Indonesia berhak <em>melek digital.</em></h1>
+      <p class="about-hero-lead">dipolis lahir dari satu pertanyaan sederhana: kenapa konten edukasi digital yang berkualitas harus mahal, eksklusif, dan berbahasa asing?</p>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story">
+  <div class="container">
+    <div class="story-grid">
+      <div class="fu">
+        <img src="indonesia children 2.jpg" alt="Anak muda Indonesia belajar bersama" class="story-img">
+      </div>
+      <div class="fu fd1">
+        <div class="story-eyebrow">Cerita Kami</div>
+        <h2 class="story-h2">Bermula dari Frustrasi, Bertumbuh Jadi Misi</h2>
+        <p>Tahun 2023, kami memulai DIGITUS sebagai proyek kecil: sebuah blog sederhana yang membahas literasi digital dalam Bahasa Indonesia. Bukan karena ingin terlihat keren. Tapi karena kami frustrasi.</p>
+        <p>Kami melihat teman-teman sebaya kami, generasi yang seharusnya paling "digital native", ternyata kesulitan membedakan hoaks dari fakta. Kesulitan membangun karir di ekonomi digital. Kesulitan bahkan hanya untuk memahami cara kerja algoritma yang mengatur apa yang mereka lihat setiap hari.</p>
+        <div class="story-highlight">Informasi ada di mana-mana, tapi pemahaman tetap langka. Kami ingin mengubah itu.</div>
+        <p>Hari ini, dipolis adalah platform media dan edukasi literasi digital yang melayani ribuan pembaca muda Indonesia. Semua konten kami gratis. Semua dalam Bahasa Indonesia. Dan kami tidak berencana mengubah itu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BELIEF -->
+<section class="belief">
+  <div class="container">
+    <div class="belief-header fu">
+      <div class="belief-eyebrow">Yang Kami Yakini</div>
+      <h2 class="belief-h2">Tiga Hal yang Tidak Bisa Ditawar</h2>
+      <p class="belief-sub">Prinsip-prinsip ini bukan sekadar tulisan di dinding. Ini yang menentukan setiap keputusan editorial kami.</p>
+    </div>
+    <div class="belief-grid">
+      <div class="bcard fu">
+        <div class="bcard-num">01</div>
+        <div class="bcard-title">Literasi Digital adalah Hak, Bukan Privilege</div>
+        <div class="bcard-desc">Kemampuan memahami dunia digital seharusnya tidak bergantung pada seberapa tebal dompetmu atau seberapa fasih kamu berbahasa Inggris. Titik.</div>
+      </div>
+      <div class="bcard fu fd1">
+        <div class="bcard-num">02</div>
+        <div class="bcard-title">Konten Berkualitas Layak Diberikan Gratis</div>
+        <div class="bcard-desc">Kami tidak memasang paywall. Kami percaya bahwa impact yang lebih luas lebih berharga daripada revenue yang lebih besar. Pembaca kami adalah investasi kami.</div>
+      </div>
+      <div class="bcard fu fd2">
+        <div class="bcard-num">03</div>
+        <div class="bcard-title">Relevansi Mengalahkan Viralitas</div>
+        <div class="bcard-desc">Kami tidak mengejar klik. Kami mengejar pemahaman. Setiap artikel ditulis untuk dibaca ulang, bukan untuk dilupakan setelah 3 detik scroll.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline">
+  <div class="container">
+    <div class="timeline-header fu">
+      <div class="belief-eyebrow">Perjalanan Kami</div>
+      <h2 class="timeline-h2">Dari Blog Kecil ke Platform Nasional</h2>
+      <p class="timeline-sub">Setiap langkah kecil membawa kami lebih dekat ke misi yang lebih besar.</p>
+    </div>
+    <div class="tl-track fu">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2023</div>
+        <div class="tl-title">DIGITUS Lahir</div>
+        <div class="tl-desc">Dimulai sebagai blog personal dengan 3 artikel pertama tentang literasi digital dasar. Tidak ada tim, tidak ada budget, hanya niat dan laptop.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2024</div>
+        <div class="tl-title">Komunitas Mulai Terbentuk</div>
+        <div class="tl-desc">Pembaca pertama mulai datang secara organik. Kami mulai menerima pertanyaan dan feedback yang membentuk arah konten kami ke depan.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2025</div>
+        <div class="tl-title">Rebranding ke dipolis</div>
+        <div class="tl-desc">DIGITUS bertransformasi menjadi dipolis dengan identitas baru, 6 pilar konten terstruktur, dan visi yang lebih jelas: menjadi platform literasi digital terdepan untuk Gen Z Indonesia.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2026</div>
+        <div class="tl-title">Skill Up Program &amp; Layanan Korporat</div>
+        <div class="tl-desc">Meluncurkan program edukasi terstruktur dan mulai bekerja sama dengan institusi untuk memperluas dampak literasi digital di Indonesia.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team">
+  <div class="container">
+    <div class="team-header fu">
+      <div class="belief-eyebrow">Tim Editorial</div>
+      <h2 class="team-h2">Orang-Orang di Balik Layar</h2>
+      <p class="team-sub">Kami bukan perusahaan besar. Kami sekelompok anak muda yang percaya bahwa konten bisa mengubah cara orang berpikir.</p>
+    </div>
+    <div class="team-grid">
+      <div class="tcard fu">
+        <div class="tcard-avatar">YD</div>
+        <div class="tcard-name">Yuda</div>
+        <div class="tcard-role">Founder &amp; Editor-in-Chief</div>
+      </div>
+      <div class="tcard fu fd1">
+        <div class="tcard-avatar" style="background:var(--pink);">RA</div>
+        <div class="tcard-name">Rizky Ananda</div>
+        <div class="tcard-role">Content Writer</div>
+      </div>
+      <div class="tcard fu fd1">
+        <div class="tcard-avatar" style="background:#2d6b00;">NF</div>
+        <div class="tcard-name">Nadia Fitri</div>
+        <div class="tcard-role">Visual Designer</div>
+      </div>
+      <div class="tcard fu fd2">
+        <div class="tcard-avatar" style="background:#b8860b;">DP</div>
+        <div class="tcard-name">Dimas Prasetyo</div>
+        <div class="tcard-role">Research &amp; Data</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING CTA -->
+<section class="closing">
+  <div class="closing-glow"></div>
+  <div class="container">
+    <div class="closing-inner fu">
+      <h2>Kami Tidak Bisa Mengubah Dunia Sendirian</h2>
+      <p>Tapi kami bisa mulai dari sini. Dari satu artikel. Satu pembaca. Satu pemahaman baru yang mengubah cara seseorang melihat dunia digital. Bergabunglah dengan kami.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="topik.html" class="btn btn-lime">Mulai Membaca</a>
+        <a href="index.html#newsletter" class="btn btn-outline-w">Subscribe Newsletter</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="fb-logo">
+          <img src="logo-white.png" alt="dipolis logo" style="width:32px;height:32px;">
+          <span class="fb-logo-text">dipolis</span>
+        </div>
+        <p class="fb-desc">Platform media dan edukasi literasi digital untuk anak muda Indonesia. Konten berkualitas, gratis, selalu relevan. Berdiri sejak 2023.</p>
+        <div class="socials">
+          <a href="#" class="sbtn">IG</a>
+          <a href="#" class="sbtn">TT</a>
+          <a href="#" class="sbtn">YT</a>
+        </div>
+      </div>
+      <div>
+        <div class="fcol-title">Topik</div>
+        <ul class="flinks">
+          <li><a href="topik.html#mindfulness">Mindfulness &amp; Case Study</a></li>
+          <li><a href="topik.html#design">Design Skill</a></li>
+          <li><a href="topik.html#news">News &amp; Update</a></li>
+          <li><a href="topik.html#industry">Industry Insight</a></li>
+          <li><a href="topik.html#edu">Edu Picks</a></li>
+          <li><a href="topik.html#culture">Culture Spotlight</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="fcol-title">Platform</div>
+        <ul class="flinks">
+          <li><a href="index.html#artikel">Semua Artikel</a></li>
+          <li><a href="index.html#skillup">Skill Up</a></li>
+          <li><a href="index.html#layanan">Layanan</a></li>
+          <li><a href="index.html#tanya">Tanya dipolis</a></li>
+          <li><a href="index.html#newsletter">Newsletter</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="fcol-title">Info</div>
+        <ul class="flinks">
+          <li><a href="tentang.html">Tentang Kami</a></li>
+          <li><a href="#">Tim Editorial</a></li>
+          <li><a href="#">Advertise</a></li>
+          <li><a href="#">Kontak</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <div class="fcopy">&copy; 2023 <b>dipolis.id</b>. All rights reserved. Made with &#9829; for Indonesian youth.</div>
+      <div class="fbot-r"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nb = document.getElementById('nb');
+  window.addEventListener('scroll', () => nb.classList.toggle('scrolled', scrollY > 20));
+  const obs = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('vis')), { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fu').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
